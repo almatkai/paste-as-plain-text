@@ -1,0 +1,173 @@
+{
+  "$schema": "https://www.raycast.com/schemas/extension.json",
+  "name": "paste-as-plain-text",
+  "title": "Paste as Plain Text",
+  "description": "Paste text from the clipboard as any format.",
+  "icon": "paste-icon.png",
+  "author": "almatkai",
+  "contributors": [
+    "pantajoe",
+    "kero13",
+    "ridemountainpig"
+  ],
+  "categories": [
+    "Developer Tools",
+    "Productivity",
+    "System"
+  ],
+  "platforms": [
+    "macOS",
+    "Windows"
+  ],
+  "keywords": [
+    "clipboard",
+    "paste",
+    "text",
+    "format",
+    "paste as url",
+    "paste as file",
+    "paste as json",
+    "paste as number",
+    "paste as markdown link",
+    "paste as markdown image"
+  ],
+  "license": "MIT",
+  "preferences": [
+    {
+      "title": "Actions Before Pasting",
+      "label": "Trim Start",
+      "name": "trimStart",
+      "type": "checkbox",
+      "description": "Trim spaces in front of plain text",
+      "default": true,
+      "required": false
+    },
+    {
+      "label": "Trim End",
+      "name": "trimEnd",
+      "type": "checkbox",
+      "description": "Trim spaces at the end of plain text",
+      "default": true,
+      "required": false
+    },
+    {
+      "label": "Clean line breaks",
+      "name": "cleanLineBreaks",
+      "type": "checkbox",
+      "description": "Replace all line breaks with spaces",
+      "default": false,
+      "required": false
+    },
+    {
+      "title": "Actions When Pasting",
+      "name": "autoFetchTitle",
+      "label": "Auto Fetch Title",
+      "type": "checkbox",
+      "description": "Auto fetch title from URL when pasting as Markdown Link and Markdown Image",
+      "required": false,
+      "default": true
+    },
+    {
+      "title": "Actions After Pasting",
+      "name": "replaceClipboard",
+      "label": "Replace Clipboard",
+      "type": "checkbox",
+      "description": "Replace clipboard with pasted text after pasting",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "showTips",
+      "label": "Show Tips",
+      "type": "checkbox",
+      "description": "Show tips after pasting",
+      "required": false,
+      "default": true
+    }
+  ],
+  "commands": [
+    {
+      "name": "paste-as-plain-text",
+      "title": "Paste as",
+      "subtitle": "Plain Text",
+      "description": "Paste text from the clipboard as any format.",
+      "mode": "no-view",
+      "arguments": [
+        {
+          "name": "advancedPasteFormat",
+          "type": "dropdown",
+          "description": "Paste text from the clipboard as any format you want.",
+          "placeholder": "Plain Text",
+          "required": false,
+          "default": "",
+          "data": [
+            {
+              "title": "URL",
+              "value": "URL"
+            },
+            {
+              "title": "File",
+              "value": "File"
+            },
+            {
+              "title": "JSON",
+              "value": "JSON"
+            },
+            {
+              "title": "Number",
+              "value": "Number"
+            },
+            {
+              "title": "Markdown Link",
+              "value": "Markdown Link"
+            },
+            {
+              "title": "Markdown Image",
+              "value": "Markdown Image"
+            }
+          ]
+        }
+      ],
+      "platforms": [
+        "macOS",
+        "Windows"
+      ]
+    }
+  ],
+  "dependencies": {
+    "@raycast/api": "^1.104.1",
+    "axios": "^1.12.2",
+    "cheerio": "^1.1.2",
+    "fs-extra": "^11.3.2",
+    "json5": "^2.2.3",
+    "validator": "^13.15.15"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "tsx": "^4.22.4",
+    "typescript": "^5.9.3"
+  },
+  "scripts": {
+    "build": "ray build -e dist",
+    "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test test/*.test.ts"
+  },
+  "id": "com.tezbar.paste-as-plain-text",
+  "version": "0.1.0",
+  "tezbar": {
+    "schemaVersion": 1,
+    "platforms": [
+      "macos",
+      "windows"
+    ],
+    "linuxStatus": "coming-soon",
+    "repository": "https://github.com/almatkai/paste-as-plain-text",
+    "upstream": {
+      "repository": "https://github.com/raycast/extensions",
+      "path": "extensions/paste-as-plain-text",
+      "commit": "6734d85992290066fd31a7f5bee3cca3d3545a1a"
+    }
+  }
+}
