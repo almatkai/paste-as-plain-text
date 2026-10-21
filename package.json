@@ -3,7 +3,7 @@
   "name": "paste-as-plain-text",
   "title": "Paste as Plain Text",
   "description": "Paste text from the clipboard as any format.",
-  "icon": "paste-icon.png",
+  "icon": "assets/paste-icon.png",
   "author": "almatkai",
   "contributors": [
     "pantajoe",
