@@ -1,0 +1,1725 @@
+{
+  "provenance": {
+    "upstreamCommit": "6734d85992290066fd31a7f5bee3cca3d3545a1a",
+    "ownCommit": "a3ae1c5abb3b9b79efd5bbbe0545f364b0251a3a",
+    "dependencies": {
+      "json5": "2.2.3",
+      "validator": "13.15.23",
+      "cheerio": "1.1.2",
+      "typescript": "5.9.3"
+    },
+    "sourceHashes": {
+      "src/paste-as-plain-text.tsx": "078bd5b45f151c77b33a1b6730386847acc5264d1c0118dffb45a14f5abad03e",
+      "src/utils/common-utils.ts": "3315a3699c2b26b7641bf3b42cf0353d4aa5ddf4dd7d84698017584a91336d71",
+      "src/utils/paste-as-utils.ts": "d046dcc039e51a1749a858098694616baef278969e88e072812300f7901bc7d5",
+      "src/types/types.ts": "a34f8705d7a7f457a28365fb8223dd340c7d647b15dafdc09e62a806134ad205",
+      "package.json": "a8b7e828b4ab367c8f837d54b4c01421a8d6036ddfd62ce52ddcdc9d45d00a6c"
+    }
+  },
+  "transforms": [
+    {
+      "text": "",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": false,
+        "cleanLineBreaks": false
+      },
+      "expected": ""
+    },
+    {
+      "text": "",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": false,
+        "cleanLineBreaks": false
+      },
+      "expected": ""
+    },
+    {
+      "text": "",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": true,
+        "cleanLineBreaks": false
+      },
+      "expected": ""
+    },
+    {
+      "text": "",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": true,
+        "cleanLineBreaks": false
+      },
+      "expected": ""
+    },
+    {
+      "text": "",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": false,
+        "cleanLineBreaks": true
+      },
+      "expected": ""
+    },
+    {
+      "text": "",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": false,
+        "cleanLineBreaks": true
+      },
+      "expected": ""
+    },
+    {
+      "text": "",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": true,
+        "cleanLineBreaks": true
+      },
+      "expected": ""
+    },
+    {
+      "text": "",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": true,
+        "cleanLineBreaks": true
+      },
+      "expected": ""
+    },
+    {
+      "text": " ",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": false,
+        "cleanLineBreaks": false
+      },
+      "expected": " "
+    },
+    {
+      "text": " ",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": false,
+        "cleanLineBreaks": false
+      },
+      "expected": ""
+    },
+    {
+      "text": " ",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": true,
+        "cleanLineBreaks": false
+      },
+      "expected": ""
+    },
+    {
+      "text": " ",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": true,
+        "cleanLineBreaks": false
+      },
+      "expected": ""
+    },
+    {
+      "text": " ",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": false,
+        "cleanLineBreaks": true
+      },
+      "expected": " "
+    },
+    {
+      "text": " ",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": false,
+        "cleanLineBreaks": true
+      },
+      "expected": ""
+    },
+    {
+      "text": " ",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": true,
+        "cleanLineBreaks": true
+      },
+      "expected": ""
+    },
+    {
+      "text": " ",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": true,
+        "cleanLineBreaks": true
+      },
+      "expected": ""
+    },
+    {
+      "text": "\t\r\n",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": false,
+        "cleanLineBreaks": false
+      },
+      "expected": "\t\r\n"
+    },
+    {
+      "text": "\t\r\n",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": false,
+        "cleanLineBreaks": false
+      },
+      "expected": ""
+    },
+    {
+      "text": "\t\r\n",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": true,
+        "cleanLineBreaks": false
+      },
+      "expected": ""
+    },
+    {
+      "text": "\t\r\n",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": true,
+        "cleanLineBreaks": false
+      },
+      "expected": ""
+    },
+    {
+      "text": "\t\r\n",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": false,
+        "cleanLineBreaks": true
+      },
+      "expected": " "
+    },
+    {
+      "text": "\t\r\n",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": false,
+        "cleanLineBreaks": true
+      },
+      "expected": ""
+    },
+    {
+      "text": "\t\r\n",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": true,
+        "cleanLineBreaks": true
+      },
+      "expected": ""
+    },
+    {
+      "text": "\t\r\n",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": true,
+        "cleanLineBreaks": true
+      },
+      "expected": ""
+    },
+    {
+      "text": "﻿ a ﻿",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": false,
+        "cleanLineBreaks": false
+      },
+      "expected": "﻿ a ﻿"
+    },
+    {
+      "text": "﻿ a ﻿",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": false,
+        "cleanLineBreaks": false
+      },
+      "expected": "a ﻿"
+    },
+    {
+      "text": "﻿ a ﻿",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": true,
+        "cleanLineBreaks": false
+      },
+      "expected": "﻿ a"
+    },
+    {
+      "text": "﻿ a ﻿",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": true,
+        "cleanLineBreaks": false
+      },
+      "expected": "a"
+    },
+    {
+      "text": "﻿ a ﻿",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": false,
+        "cleanLineBreaks": true
+      },
+      "expected": "﻿ a ﻿"
+    },
+    {
+      "text": "﻿ a ﻿",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": false,
+        "cleanLineBreaks": true
+      },
+      "expected": "a ﻿"
+    },
+    {
+      "text": "﻿ a ﻿",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": true,
+        "cleanLineBreaks": true
+      },
+      "expected": "﻿ a"
+    },
+    {
+      "text": "﻿ a ﻿",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": true,
+        "cleanLineBreaks": true
+      },
+      "expected": "a"
+    },
+    {
+      "text": "a",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": false,
+        "cleanLineBreaks": false
+      },
+      "expected": "a"
+    },
+    {
+      "text": "a",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": false,
+        "cleanLineBreaks": false
+      },
+      "expected": "a"
+    },
+    {
+      "text": "a",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": true,
+        "cleanLineBreaks": false
+      },
+      "expected": "a"
+    },
+    {
+      "text": "a",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": true,
+        "cleanLineBreaks": false
+      },
+      "expected": "a"
+    },
+    {
+      "text": "a",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": false,
+        "cleanLineBreaks": true
+      },
+      "expected": "a"
+    },
+    {
+      "text": "a",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": false,
+        "cleanLineBreaks": true
+      },
+      "expected": "a"
+    },
+    {
+      "text": "a",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": true,
+        "cleanLineBreaks": true
+      },
+      "expected": "a"
+    },
+    {
+      "text": "a",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": true,
+        "cleanLineBreaks": true
+      },
+      "expected": "a"
+    },
+    {
+      "text": "​ x ​",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": false,
+        "cleanLineBreaks": false
+      },
+      "expected": "​ x ​"
+    },
+    {
+      "text": "​ x ​",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": false,
+        "cleanLineBreaks": false
+      },
+      "expected": "​ x ​"
+    },
+    {
+      "text": "​ x ​",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": true,
+        "cleanLineBreaks": false
+      },
+      "expected": "​ x ​"
+    },
+    {
+      "text": "​ x ​",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": true,
+        "cleanLineBreaks": false
+      },
+      "expected": "​ x ​"
+    },
+    {
+      "text": "​ x ​",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": false,
+        "cleanLineBreaks": true
+      },
+      "expected": "​ x ​"
+    },
+    {
+      "text": "​ x ​",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": false,
+        "cleanLineBreaks": true
+      },
+      "expected": "​ x ​"
+    },
+    {
+      "text": "​ x ​",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": true,
+        "cleanLineBreaks": true
+      },
+      "expected": "​ x ​"
+    },
+    {
+      "text": "​ x ​",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": true,
+        "cleanLineBreaks": true
+      },
+      "expected": "​ x ​"
+    },
+    {
+      "text": " a \r\n \n b ",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": false,
+        "cleanLineBreaks": false
+      },
+      "expected": " a \r\n \n b "
+    },
+    {
+      "text": " a \r\n \n b ",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": false,
+        "cleanLineBreaks": false
+      },
+      "expected": "a \r\n \n b "
+    },
+    {
+      "text": " a \r\n \n b ",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": true,
+        "cleanLineBreaks": false
+      },
+      "expected": " a \r\n \n b"
+    },
+    {
+      "text": " a \r\n \n b ",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": true,
+        "cleanLineBreaks": false
+      },
+      "expected": "a \r\n \n b"
+    },
+    {
+      "text": " a \r\n \n b ",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": false,
+        "cleanLineBreaks": true
+      },
+      "expected": " a  b "
+    },
+    {
+      "text": " a \r\n \n b ",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": false,
+        "cleanLineBreaks": true
+      },
+      "expected": "a  b "
+    },
+    {
+      "text": " a \r\n \n b ",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": true,
+        "cleanLineBreaks": true
+      },
+      "expected": " a  b"
+    },
+    {
+      "text": " a \r\n \n b ",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": true,
+        "cleanLineBreaks": true
+      },
+      "expected": "a  b"
+    },
+    {
+      "text": " a  b  c ",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": false,
+        "cleanLineBreaks": false
+      },
+      "expected": " a  b  c "
+    },
+    {
+      "text": " a  b  c ",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": false,
+        "cleanLineBreaks": false
+      },
+      "expected": "a  b  c "
+    },
+    {
+      "text": " a  b  c ",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": true,
+        "cleanLineBreaks": false
+      },
+      "expected": " a  b  c"
+    },
+    {
+      "text": " a  b  c ",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": true,
+        "cleanLineBreaks": false
+      },
+      "expected": "a  b  c"
+    },
+    {
+      "text": " a  b  c ",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": false,
+        "cleanLineBreaks": true
+      },
+      "expected": " a  b  c "
+    },
+    {
+      "text": " a  b  c ",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": false,
+        "cleanLineBreaks": true
+      },
+      "expected": "a  b  c "
+    },
+    {
+      "text": " a  b  c ",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": true,
+        "cleanLineBreaks": true
+      },
+      "expected": " a  b  c"
+    },
+    {
+      "text": " a  b  c ",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": true,
+        "cleanLineBreaks": true
+      },
+      "expected": "a  b  c"
+    },
+    {
+      "text": "a\n \nb",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": false,
+        "cleanLineBreaks": false
+      },
+      "expected": "a\n \nb"
+    },
+    {
+      "text": "a\n \nb",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": false,
+        "cleanLineBreaks": false
+      },
+      "expected": "a\n \nb"
+    },
+    {
+      "text": "a\n \nb",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": true,
+        "cleanLineBreaks": false
+      },
+      "expected": "a\n \nb"
+    },
+    {
+      "text": "a\n \nb",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": true,
+        "cleanLineBreaks": false
+      },
+      "expected": "a\n \nb"
+    },
+    {
+      "text": "a\n \nb",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": false,
+        "cleanLineBreaks": true
+      },
+      "expected": "a  b"
+    },
+    {
+      "text": "a\n \nb",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": false,
+        "cleanLineBreaks": true
+      },
+      "expected": "a  b"
+    },
+    {
+      "text": "a\n \nb",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": true,
+        "cleanLineBreaks": true
+      },
+      "expected": "a  b"
+    },
+    {
+      "text": "a\n \nb",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": true,
+        "cleanLineBreaks": true
+      },
+      "expected": "a  b"
+    },
+    {
+      "text": "  hi　",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": false,
+        "cleanLineBreaks": false
+      },
+      "expected": "  hi　"
+    },
+    {
+      "text": "  hi　",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": false,
+        "cleanLineBreaks": false
+      },
+      "expected": "hi　"
+    },
+    {
+      "text": "  hi　",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": true,
+        "cleanLineBreaks": false
+      },
+      "expected": "  hi"
+    },
+    {
+      "text": "  hi　",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": true,
+        "cleanLineBreaks": false
+      },
+      "expected": "hi"
+    },
+    {
+      "text": "  hi　",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": false,
+        "cleanLineBreaks": true
+      },
+      "expected": "  hi　"
+    },
+    {
+      "text": "  hi　",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": false,
+        "cleanLineBreaks": true
+      },
+      "expected": "hi　"
+    },
+    {
+      "text": "  hi　",
+      "preferences": {
+        "trimStart": false,
+        "trimEnd": true,
+        "cleanLineBreaks": true
+      },
+      "expected": "  hi"
+    },
+    {
+      "text": "  hi　",
+      "preferences": {
+        "trimStart": true,
+        "trimEnd": true,
+        "cleanLineBreaks": true
+      },
+      "expected": "hi"
+    }
+  ],
+  "extraction": [
+    {
+      "text": "https://a.test/x). and https://b.test",
+      "url": "https://a.test/x).",
+      "number": ""
+    },
+    {
+      "text": "HTTPS://a.test",
+      "url": null,
+      "number": ""
+    },
+    {
+      "text": "http:// https://yes.test",
+      "url": "https://yes.test",
+      "number": ""
+    },
+    {
+      "text": "xhttps://a.test?q=1,",
+      "url": "https://a.test?q=1,",
+      "number": "1"
+    },
+    {
+      "text": "http://xtail",
+      "url": "http://xtail",
+      "number": ""
+    },
+    {
+      "text": "http://x﻿end",
+      "url": "http://x",
+      "number": ""
+    },
+    {
+      "text": "http://x end",
+      "url": "http://x",
+      "number": ""
+    },
+    {
+      "text": "http://",
+      "url": null,
+      "number": ""
+    },
+    {
+      "text": "12abc",
+      "url": null,
+      "number": ""
+    },
+    {
+      "text": "-12abc",
+      "url": null,
+      "number": ""
+    },
+    {
+      "text": "x12.34abc",
+      "url": null,
+      "number": "12"
+    },
+    {
+      "text": "12,abc",
+      "url": null,
+      "number": "12"
+    },
+    {
+      "text": ",abc",
+      "url": null,
+      "number": ""
+    },
+    {
+      "text": ",123,",
+      "url": null,
+      "number": "123"
+    },
+    {
+      "text": "abc-1,234.50x",
+      "url": null,
+      "number": "-1234"
+    },
+    {
+      "text": "１２３ and 42",
+      "url": null,
+      "number": "42"
+    },
+    {
+      "text": "1_2",
+      "url": null,
+      "number": "2"
+    },
+    {
+      "text": "99é",
+      "url": null,
+      "number": "99"
+    },
+    {
+      "text": "1e20",
+      "url": null,
+      "number": "20"
+    },
+    {
+      "text": "--12",
+      "url": null,
+      "number": "-12"
+    },
+    {
+      "text": "1.2.3",
+      "url": null,
+      "number": "1.2"
+    },
+    {
+      "text": "-,foo",
+      "url": null,
+      "number": "-"
+    },
+    {
+      "text": "0",
+      "url": null,
+      "number": "0"
+    },
+    {
+      "text": "-0",
+      "url": null,
+      "number": "-0"
+    },
+    {
+      "text": ",,,",
+      "url": null,
+      "number": ""
+    },
+    {
+      "text": "no numbers",
+      "url": null,
+      "number": ""
+    },
+    {
+      "text": "http://x",
+      "url": "http://x",
+      "number": ""
+    }
+  ],
+  "validation": [
+    {
+      "text": "https://example.com",
+      "expected": true
+    },
+    {
+      "text": "ftp://example.com/a",
+      "expected": true
+    },
+    {
+      "text": "http://localhost",
+      "expected": false
+    },
+    {
+      "text": "https://a.test/a(b)]",
+      "expected": true
+    },
+    {
+      "text": "https://example.com?q=[x]",
+      "expected": true
+    },
+    {
+      "text": "HTTPS://EXAMPLE.COM",
+      "expected": true
+    },
+    {
+      "text": "http:example.com",
+      "expected": true
+    },
+    {
+      "text": "https://127.0.0.1",
+      "expected": true
+    },
+    {
+      "text": "http://[::1]:8080",
+      "expected": true
+    },
+    {
+      "text": "http://[fe80::1%eth0]",
+      "expected": true
+    },
+    {
+      "text": "http://foo_bar.com",
+      "expected": false
+    },
+    {
+      "text": "http://example.com.",
+      "expected": false
+    },
+    {
+      "text": "http://a.c",
+      "expected": false
+    },
+    {
+      "text": "http://a.123",
+      "expected": false
+    },
+    {
+      "text": "http://例子.中国",
+      "expected": true
+    },
+    {
+      "text": "http://😀.com",
+      "expected": true
+    },
+    {
+      "text": "http://user:pass@example.com",
+      "expected": true
+    },
+    {
+      "text": "http://@example.com",
+      "expected": false
+    },
+    {
+      "text": "http://a:b:c@example.com",
+      "expected": false
+    },
+    {
+      "text": "http://example.com:",
+      "expected": true
+    },
+    {
+      "text": "http://example.com:0",
+      "expected": false
+    },
+    {
+      "text": "http://example.com:65536",
+      "expected": false
+    },
+    {
+      "text": "http://example.com:001",
+      "expected": true
+    },
+    {
+      "text": "file:///tmp/a",
+      "expected": false
+    },
+    {
+      "text": "mailto:a@example.com",
+      "expected": false
+    },
+    {
+      "text": "https://example.com/<x>",
+      "expected": false
+    },
+    {
+      "text": "https://example.com/",
+      "expected": true
+    },
+    {
+      "text": "http://a..com",
+      "expected": false
+    },
+    {
+      "text": "http://-a.com",
+      "expected": false
+    },
+    {
+      "text": "http://a-.com",
+      "expected": false
+    },
+    {
+      "text": "http://１２３.com",
+      "expected": false
+    },
+    {
+      "text": "http://example.com/a\nb",
+      "expected": false
+    },
+    {
+      "text": "http://user:p@a@b.com",
+      "expected": false
+    },
+    {
+      "text": "https://example.com/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "expected": false
+    },
+    {
+      "text": "http:127.0.0.1",
+      "expected": false
+    },
+    {
+      "text": "http:user@example.com",
+      "expected": false
+    },
+    {
+      "text": "http:0@example.com",
+      "expected": false
+    },
+    {
+      "text": "http:user!@example.com",
+      "expected": true
+    },
+    {
+      "text": "http://[::1]:",
+      "expected": false
+    },
+    {
+      "text": "http://01.2.3.4",
+      "expected": false
+    },
+    {
+      "text": "http://example.com:00000000000000000080",
+      "expected": true
+    },
+    {
+      "text": "http://[::ffff:192.168.1.1]",
+      "expected": true
+    },
+    {
+      "text": "http://[fe80::1%a.b]",
+      "expected": true
+    }
+  ],
+  "jsonCases": [
+    {
+      "text": "{foo:'bar', trailing:[1,2,], //comment\n yes:true}",
+      "expected": "{\n  \"foo\": \"bar\",\n  \"trailing\": [\n    1,\n    2\n  ],\n  \"yes\": true\n}"
+    },
+    {
+      "text": "{z:1,\"2\":2,\"1\":1,a:3,\"01\":4}",
+      "expected": "{\n  \"1\": 1,\n  \"2\": 2,\n  \"z\": 1,\n  \"a\": 3,\n  \"01\": 4\n}"
+    },
+    {
+      "text": "{a:1,b:2,a:3}",
+      "expected": "{\n  \"a\": 3,\n  \"b\": 2\n}"
+    },
+    {
+      "text": "{\"4294967295\":1,z:0,\"4294967294\":2,\"0\":3,\"01\":4}",
+      "expected": "{\n  \"0\": 3,\n  \"4294967294\": 2,\n  \"4294967295\": 1,\n  \"z\": 0,\n  \"01\": 4\n}"
+    },
+    {
+      "text": "[Infinity,-Infinity,NaN,-NaN]",
+      "expected": "[\n  null,\n  null,\n  null,\n  null\n]"
+    },
+    {
+      "text": "+Infinity",
+      "expected": "null"
+    },
+    {
+      "text": "+NaN",
+      "expected": "null"
+    },
+    {
+      "text": "[1e21,1e-7,1e-6,-0,1.0,9007199254740993]",
+      "expected": "[\n  1e+21,\n  1e-7,\n  0.000001,\n  0,\n  1,\n  9007199254740992\n]"
+    },
+    {
+      "text": "0xdecaf",
+      "expected": "912559"
+    },
+    {
+      "text": "-0xFF",
+      "expected": "-255"
+    },
+    {
+      "text": "{bad:}",
+      "expected": null
+    },
+    {
+      "text": "undefined",
+      "expected": null
+    },
+    {
+      "text": "[true,null,\"x\"]",
+      "expected": "[\n  true,\n  null,\n  \"x\"\n]"
+    },
+    {
+      "text": "\"\\uD83D\\uDE00\"",
+      "expected": "\"😀\""
+    },
+    {
+      "text": "\"\\uD800\"",
+      "expected": "\"\\ud800\""
+    },
+    {
+      "text": "9223372036854775808",
+      "expected": "9223372036854776000"
+    },
+    {
+      "text": "1e400",
+      "expected": "null"
+    },
+    {
+      "text": "0xffffffffffffffff",
+      "expected": "18446744073709552000"
+    },
+    {
+      "text": "{line:\"a\\\nb\"}",
+      "expected": "{\n  \"line\": \"ab\"\n}"
+    }
+  ],
+  "cases": [
+    {
+      "mode": "",
+      "text": "  hello \n world  ",
+      "pastes": [
+        "hello \n world"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "",
+      "text": "  https://example.com/a  ",
+      "pastes": [
+        "https://example.com/a"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "",
+      "text": "{a:1,}",
+      "pastes": [
+        "{a:1,}"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "",
+      "text": "value -1,234.50x",
+      "pastes": [
+        "value -1,234.50x"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "",
+      "text": " ",
+      "pastes": [
+        ""
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "",
+      "text": "",
+      "pastes": [],
+      "copies": [],
+      "failure": true
+    },
+    {
+      "mode": "JSON",
+      "text": "  hello \n world  ",
+      "pastes": [
+        "hello \n world"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "JSON",
+      "text": "  https://example.com/a  ",
+      "pastes": [
+        "https://example.com/a"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "JSON",
+      "text": "{a:1,}",
+      "pastes": [
+        "{\n  \"a\": 1\n}"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "JSON",
+      "text": "value -1,234.50x",
+      "pastes": [
+        "value -1,234.50x"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "JSON",
+      "text": " ",
+      "pastes": [
+        ""
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "JSON",
+      "text": "",
+      "pastes": [],
+      "copies": [],
+      "failure": true
+    },
+    {
+      "mode": "URL",
+      "text": "  hello \n world  ",
+      "pastes": [
+        "hello \n world"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "URL",
+      "text": "  https://example.com/a  ",
+      "pastes": [
+        "https://example.com/a"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "URL",
+      "text": "{a:1,}",
+      "pastes": [
+        "{a:1,}"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "URL",
+      "text": "value -1,234.50x",
+      "pastes": [
+        "value -1,234.50x"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "URL",
+      "text": " ",
+      "pastes": [
+        ""
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "URL",
+      "text": "",
+      "pastes": [],
+      "copies": [],
+      "failure": true
+    },
+    {
+      "mode": "Number",
+      "text": "  hello \n world  ",
+      "pastes": [
+        "hello \n world"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "Number",
+      "text": "  https://example.com/a  ",
+      "pastes": [
+        "https://example.com/a"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "Number",
+      "text": "{a:1,}",
+      "pastes": [
+        "1"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "Number",
+      "text": "value -1,234.50x",
+      "pastes": [
+        "-1234"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "Number",
+      "text": " ",
+      "pastes": [
+        ""
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "Number",
+      "text": "",
+      "pastes": [],
+      "copies": [],
+      "failure": true
+    },
+    {
+      "mode": "File",
+      "text": "  hello \n world  ",
+      "pastes": [
+        "hello \n world"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "File",
+      "text": "  https://example.com/a  ",
+      "pastes": [
+        "https://example.com/a"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "File",
+      "text": "{a:1,}",
+      "pastes": [
+        "{a:1,}"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "File",
+      "text": "value -1,234.50x",
+      "pastes": [
+        "value -1,234.50x"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "File",
+      "text": " ",
+      "pastes": [
+        ""
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "File",
+      "text": "",
+      "pastes": [],
+      "copies": [],
+      "failure": true
+    },
+    {
+      "mode": "Markdown Link",
+      "text": "  hello \n world  ",
+      "pastes": [
+        "hello \n world"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "Markdown Link",
+      "text": "  https://example.com/a  ",
+      "pastes": [
+        "[Fixture & Title](https://example.com/a)"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "Markdown Link",
+      "text": "{a:1,}",
+      "pastes": [
+        "{a:1,}"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "Markdown Link",
+      "text": "value -1,234.50x",
+      "pastes": [
+        "value -1,234.50x"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "Markdown Link",
+      "text": " ",
+      "pastes": [
+        ""
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "Markdown Link",
+      "text": "",
+      "pastes": [],
+      "copies": [],
+      "failure": true
+    },
+    {
+      "mode": "Markdown Image",
+      "text": "  hello \n world  ",
+      "pastes": [
+        "hello \n world"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "Markdown Image",
+      "text": "  https://example.com/a  ",
+      "pastes": [
+        "![Fixture & Title](https://example.com/a)"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "Markdown Image",
+      "text": "{a:1,}",
+      "pastes": [
+        "{a:1,}"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "Markdown Image",
+      "text": "value -1,234.50x",
+      "pastes": [
+        "value -1,234.50x"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "Markdown Image",
+      "text": " ",
+      "pastes": [
+        ""
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "Markdown Image",
+      "text": "",
+      "pastes": [],
+      "copies": [],
+      "failure": true
+    },
+    {
+      "mode": "Unknown",
+      "text": "  hello \n world  ",
+      "pastes": [
+        "hello \n world"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "Unknown",
+      "text": "  https://example.com/a  ",
+      "pastes": [
+        "https://example.com/a"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "Unknown",
+      "text": "{a:1,}",
+      "pastes": [
+        "{a:1,}"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "Unknown",
+      "text": "value -1,234.50x",
+      "pastes": [
+        "value -1,234.50x"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "Unknown",
+      "text": " ",
+      "pastes": [
+        ""
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "Unknown",
+      "text": "",
+      "pastes": [],
+      "copies": [],
+      "failure": true
+    },
+    {
+      "mode": "File",
+      "text": " /fixture/file name.txt ",
+      "existing": [
+        "/fixture/file name.txt"
+      ],
+      "pastes": [
+        {
+          "file": "/fixture/file name.txt"
+        }
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "File",
+      "text": "file:///fixture/file%20name.txt",
+      "existing": [
+        "/fixture/file name.txt"
+      ],
+      "pastes": [
+        {
+          "file": "/fixture/file name.txt"
+        }
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "File",
+      "text": "fallback",
+      "file": "/fixture/file name.txt",
+      "existing": [
+        "/fixture/file name.txt"
+      ],
+      "pastes": [
+        {
+          "file": "/fixture/file name.txt"
+        }
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "File",
+      "text": "fallback",
+      "file": "/missing",
+      "pastes": [
+        "fallback"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "Markdown Link",
+      "text": "https://example.com",
+      "titleFailure": true,
+      "pastes": [
+        "[](https://example.com)"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "Markdown Image",
+      "text": "https://example.com",
+      "html": "<title>[x](y)</title>",
+      "pastes": [
+        "![[x](y)](https://example.com)"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "Markdown Link",
+      "text": " \n https://example.com\n ",
+      "preferences": {
+        "trimStart": false
+      },
+      "pastes": [
+        "[Fixture & Title](https://example.com)"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "Markdown Link",
+      "text": " \n https://example.com\n ",
+      "preferences": {
+        "trimEnd": false
+      },
+      "pastes": [
+        "[Fixture & Title](https://example.com)"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "Markdown Link",
+      "text": " \n https://example.com\n ",
+      "preferences": {
+        "cleanLineBreaks": true
+      },
+      "pastes": [
+        "[Fixture & Title](https://example.com)"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "Markdown Link",
+      "text": " \n https://example.com\n ",
+      "preferences": {
+        "autoFetchTitle": false
+      },
+      "pastes": [
+        "[](https://example.com)"
+      ],
+      "copies": [],
+      "failure": false
+    },
+    {
+      "mode": "Markdown Link",
+      "text": " \n https://example.com\n ",
+      "preferences": {
+        "replaceClipboard": true
+      },
+      "pastes": [
+        "[Fixture & Title](https://example.com)"
+      ],
+      "copies": [
+        "[Fixture & Title](https://example.com)"
+      ],
+      "failure": false
+    },
+    {
+      "mode": "Markdown Link",
+      "text": " \n https://example.com\n ",
+      "preferences": {
+        "showTips": false
+      },
+      "pastes": [
+        "[Fixture & Title](https://example.com)"
+      ],
+      "copies": [],
+      "failure": false
+    }
+  ],
+  "argumentsOracle": [
+    {
+      "supplied": null,
+      "expected": ""
+    },
+    {
+      "supplied": "JSON",
+      "expected": "JSON"
+    },
+    {
+      "supplied": null,
+      "expected": "JSON"
+    },
+    {
+      "supplied": "",
+      "expected": ""
+    },
+    {
+      "supplied": null,
+      "expected": ""
+    },
+    {
+      "supplied": "URL",
+      "expected": "URL"
+    },
+    {
+      "supplied": null,
+      "expected": "URL"
+    }
+  ]
+}

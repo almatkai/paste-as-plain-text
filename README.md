@@ -53,3 +53,5 @@ Want more **Productivity** extensions? Try those. [©koinzhang](https://www.rayc
 </a><a id="install-extension-button" title="Install Hide Files Raycast Extension" href="https://www.raycast.com/koinzhang/hide-files#install">
         <img height="64" style="height: 64px" src="https://assets.raycast.com/koinzhang/hide-files/install_button@2x.png">
 </a>
+
+Native Rust implementation: [Native V2 build, integration and verification](v2/README.md).
