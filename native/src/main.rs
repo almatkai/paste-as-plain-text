@@ -73,7 +73,18 @@ impl Extension for Adapter {
             }
             let host = host::ProcessHost::system(ctx);
             let payload = normalize_preferences(payload);
-            tezbar_paste_as_plain_text::handle(&host, command, operation, &payload, state).await
+            let result =
+                tezbar_paste_as_plain_text::handle(&host, command, operation, &payload, state)
+                    .await;
+            // Expected command failures are domain outcomes, not transport
+            // failures. Keeping their SDK session until the host disposes it
+            // avoids failed-open cleanup tearing down notification ownership.
+            match result {
+                Err(message) if operation == "extension:run-command" => {
+                    Ok(json!({"ok":false,"mode":"no-view","message":message}))
+                }
+                other => other,
+            }
         })
     }
 }

@@ -203,3 +203,7 @@ before a catalog install can succeed. Do not put a ZIP hash inside its own ZIP.
 The macOS `.artifact.json` and sidecars provide those values. Local development
 ZIP import must use the host's verified package-import path. No host install,
 release, tag, push or publication is performed by this implementation task.
+
+### Handled command failures
+
+Expected engine failures return a successful protocol response with `ok: false`, `mode: "no-view"`, and the original error message. The host can then dispose the registered session normally without tearing down the process and its notification resources. No failed paste is retried automatically. Invalid protocol operations and cancellation keep their SDK error handling. Real desktop notification permission, presentation and dismissal remain unverified.

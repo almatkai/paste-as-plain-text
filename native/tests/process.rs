@@ -270,7 +270,9 @@ fn handshake_migration_sessions_failure_cancellation_and_shutdown() {
             json!({"sessionId":"s3","commandName":"paste-as-plain-text","preferences":{"showTips":false}}),
             &[json!(null), json!(""), json!(true)],
         )
-        .unwrap_err();
+        .unwrap();
+    assert_eq!(error["ok"], false);
+    assert_eq!(error["mode"], "no-view");
     assert_eq!(error["message"], "No content in clipboard");
     assert_eq!(
         host.methods_since(mark)[2],
@@ -279,13 +281,42 @@ fn handshake_migration_sessions_failure_cancellation_and_shutdown() {
             json!({"id":"paste-result","title":"Paste as Plain Text","body":"No content in clipboard"})
         )
     );
-    // A failed open releases its SDK slot; there is nothing left to dispose.
-    let gone = host
+    // The actual host disposes handled no-view failures too; an error here
+    // would kill the process and remove its process-owned failure notice.
+    let disposed = host
         .request("session.dispose", json!({"sessionId":"s3"}), &[])
-        .unwrap_err();
-    assert_eq!(gone["message"], "Unknown session");
+        .expect("current host treats a disposal failure as fatal");
+    assert_eq!(disposed, json!({"ok":true,"mode":"unchanged"}));
+    assert!(host.child.try_wait().unwrap().is_none());
 
-    // Host error from a typed request propagates as the session error.
+    // A deliberate new launch succeeds in the same process after the failure;
+    // no automatic retry or clipboard effect was issued by disposal itself.
+    let mark = host.reverse.len();
+    let retried = host
+        .request(
+            "session.open",
+            json!({"sessionId":"s3-retry","commandName":"paste-as-plain-text",
+            "preferences":{"showTips":false},
+            "argumentValues":{"advancedPasteFormat":"Plain Text"}}),
+            &[
+                json!(null),
+                json!("retry"),
+                json!({"ok":true,"message":"Pasted text"}),
+            ],
+        )
+        .unwrap();
+    assert_eq!(retried["ok"], true);
+    assert_eq!(
+        host.methods_since(mark)
+            .iter()
+            .filter(|(method, _)| method == "host.clipboard.pasteText")
+            .count(),
+        1
+    );
+    host.request("session.dispose", json!({"sessionId":"s3-retry"}), &[])
+        .unwrap();
+
+    // Host errors preserve their original detail as a truthful domain failure.
     let error = host
         .request(
             "session.open",
@@ -297,13 +328,13 @@ fn handshake_migration_sessions_failure_cancellation_and_shutdown() {
                 json!(true),
             ],
         )
-        .unwrap_err();
+        .unwrap();
+    assert_eq!(error["ok"], false);
     assert_eq!(error["message"], "Accessibility permission denied");
-    // A failed open releases its SDK slot; there is nothing left to dispose.
-    let gone = host
+    let disposed = host
         .request("session.dispose", json!({"sessionId":"s4"}), &[])
-        .unwrap_err();
-    assert_eq!(gone["message"], "Unknown session");
+        .expect("current host treats a disposal failure as fatal");
+    assert_eq!(disposed, json!({"ok":true,"mode":"unchanged"}));
 
     // Cancellation while a reverse request is pending: the extension cancels
     // the pending reverse request and fails the open; nothing is pasted.
