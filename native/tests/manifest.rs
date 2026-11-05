@@ -60,7 +60,8 @@ fn schema_three_preserves_original_command_preferences_platforms_and_icon() {
             "clipboard.writeFiles",
             "clipboard.paste",
             "clipboard.pasteText",
-            "window.visibility"
+            "window.visibility",
+            "notifications.show"
         ])
     );
     assert_eq!(manifest["files"], json!({}));

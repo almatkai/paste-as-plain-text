@@ -160,7 +160,7 @@ fn handshake_migration_sessions_failure_cancellation_and_shutdown() {
         .request(
             "session.open",
             json!({"sessionId":"s1","commandName":"paste-as-plain-text","preferences":{},"argumentValues":{}}),
-            &[json!(null), json!("  go https://example.com/x?y=1 now "), json!({"ok":true})],
+            &[json!(null), json!("  go https://example.com/x?y=1 now "), json!({"ok":true,"message":"Pasted text"}), json!(true)],
         )
         .unwrap();
     assert_eq!(
@@ -175,6 +175,10 @@ fn handshake_migration_sessions_failure_cancellation_and_shutdown() {
             (
                 "host.clipboard.pasteText".into(),
                 json!({"text":"https://example.com/x?y=1"})
+            ),
+            (
+                "host.notifications.show".into(),
+                json!({"id":"paste-result","title":"Paste as Plain Text","body":"🔗 Paste as URL"})
             ),
         ]
     );
@@ -231,7 +235,8 @@ fn handshake_migration_sessions_failure_cancellation_and_shutdown() {
             &[
                 json!(null),
                 json!("a\r\n-1,234.50 b"),
-                json!(true),
+                json!({"ok":true,"message":"Pasted text"}),
+                json!({"ok":true}),
                 json!(true),
             ],
         )
@@ -257,19 +262,22 @@ fn handshake_migration_sessions_failure_cancellation_and_shutdown() {
     .unwrap();
     assert_eq!(store["Args"]["PasteAs"], "Number");
 
-    // Empty clipboard: error result, launcher revealed, never pasted.
+    // Empty clipboard: visible terminal failure even on hotkey, never pasted.
     let mark = host.reverse.len();
     let error = host
         .request(
             "session.open",
             json!({"sessionId":"s3","commandName":"paste-as-plain-text","preferences":{"showTips":false}}),
-            &[json!(null), json!(""), json!(null)],
+            &[json!(null), json!(""), json!(true)],
         )
         .unwrap_err();
     assert_eq!(error["message"], "No content in clipboard");
     assert_eq!(
         host.methods_since(mark)[2],
-        ("host.window.visibility".into(), json!({"visible":true}))
+        (
+            "host.notifications.show".into(),
+            json!({"id":"paste-result","title":"Paste as Plain Text","body":"No content in clipboard"})
+        )
     );
     // A failed open releases its SDK slot; there is nothing left to dispose.
     let gone = host
@@ -286,7 +294,7 @@ fn handshake_migration_sessions_failure_cancellation_and_shutdown() {
                 json!(null),
                 json!("x"),
                 json!({"__error":"Accessibility permission denied"}),
-                json!(null),
+                json!(true),
             ],
         )
         .unwrap_err();
@@ -347,4 +355,149 @@ fn handshake_migration_sessions_failure_cancellation_and_shutdown() {
     host.request("shutdown", json!({}), &[]).unwrap();
     let status = host.child.wait().unwrap();
     assert!(status.success());
+}
+
+#[test]
+fn saved_string_preferences_control_transform_copy_fetch_and_terminal_feedback() {
+    use std::io::Read;
+    let dir = tempfile::tempdir().unwrap();
+    let manifest: Value = serde_json::from_str(include_str!("../../extension.json")).unwrap();
+    let mut host = FakeHost::spawn();
+    host.recv();
+    host.request("initialize", json!({"protocol":1,"extensionId":ID,"platform":"macOS","packageDir":dir.path().join("package"),"dataDir":dir.path().join("data"),"tempDir":dir.path().join("tmp"),"grantedCapabilities":manifest["capabilities"],"reason":"command"}), &[]).unwrap();
+    let mark = host.reverse.len();
+    let result = host.request("session.open", json!({"sessionId":"false","commandName":"paste-as-plain-text","preferences":{"trimStart":"false","trimEnd":"false","cleanLineBreaks":"false","autoFetchTitle":"false","replaceClipboard":"false","showTips":"false"},"argumentValues":{"advancedPasteFormat":""}}), &[json!(null),json!("  a\r\nb  "),json!({"ok":true,"message":"Pasted text"})]).unwrap();
+    assert_eq!(result["message"], "");
+    assert_eq!(
+        host.methods_since(mark),
+        [
+            ("host.window.visibility".into(), json!({"visible":false})),
+            ("host.clipboard.read".into(), json!({"format":"text"})),
+            (
+                "host.clipboard.pasteText".into(),
+                json!({"text":"  a\r\nb  "})
+            )
+        ]
+    );
+    host.request("session.dispose", json!({"sessionId":"false"}), &[])
+        .unwrap();
+    let mark = host.reverse.len();
+    let result = host.request("session.open", json!({"sessionId":"true","commandName":"paste-as-plain-text","preferences":{"trimStart":"true","trimEnd":"true","cleanLineBreaks":"true","autoFetchTitle":"true","replaceClipboard":"true","showTips":"true"},"argumentValues":{"advancedPasteFormat":""}}), &[json!(null),json!("  a\r\nb  "),json!({"ok":true,"message":"Pasted text"}),json!({"ok":true}),json!(true)]).unwrap();
+    assert_eq!(result["message"], "📋 Paste as Plain Text");
+    let calls = host.methods_since(mark);
+    assert_eq!(
+        calls[2],
+        ("host.clipboard.pasteText".into(), json!({"text":"a b"}))
+    );
+    assert_eq!(
+        calls[3],
+        ("host.clipboard.write".into(), json!({"text":"a b"}))
+    );
+    assert_eq!(
+        calls[4],
+        (
+            "host.notifications.show".into(),
+            json!({"id":"paste-result","title":"Paste as Plain Text","body":"📋 Paste as Plain Text"})
+        )
+    );
+    host.request("session.dispose", json!({"sessionId":"true"}), &[])
+        .unwrap();
+
+    // A local listener proves false does not fetch, and true really does. No
+    // external DNS/network or OS clipboard effects are permitted in this test.
+    let listener = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
+    listener.set_nonblocking(true).unwrap();
+    let url = format!("http://{}/title", listener.local_addr().unwrap());
+    let mark = host.reverse.len();
+    host.request("session.open", json!({"sessionId":"no-fetch","commandName":"paste-as-plain-text","preferences":{"autoFetchTitle":"false","showTips":"false"},"argumentValues":{"advancedPasteFormat":"Markdown Link"}}), &[json!(null),json!(url),json!({"ok":true,"message":"Pasted text"})]).unwrap();
+    assert_eq!(
+        listener.accept().unwrap_err().kind(),
+        std::io::ErrorKind::WouldBlock
+    );
+    assert_eq!(
+        host.methods_since(mark)[2].1,
+        json!({"text":format!("[]({url})")})
+    );
+    host.request("session.dispose", json!({"sessionId":"no-fetch"}), &[])
+        .unwrap();
+    let server = std::thread::spawn(move || {
+        let until = std::time::Instant::now() + Duration::from_secs(5);
+        let mut stream = loop {
+            match listener.accept() {
+                Ok((stream, _)) => break stream,
+                Err(error)
+                    if error.kind() == std::io::ErrorKind::WouldBlock
+                        && std::time::Instant::now() < until =>
+                {
+                    std::thread::sleep(Duration::from_millis(5))
+                }
+                Err(error) => panic!("loopback title request: {error}"),
+            }
+        };
+        stream
+            .set_read_timeout(Some(Duration::from_secs(2)))
+            .unwrap();
+        let mut buffer = [0; 2048];
+        assert!(stream.read(&mut buffer).unwrap() > 0);
+        stream
+            .write_all(
+                b"HTTP/1.1 200 OK\r\nConnection: close\r\n\r\n<title>Saved &amp; Exact</title>",
+            )
+            .unwrap();
+    });
+    let mark = host.reverse.len();
+    host.request("session.open", json!({"sessionId":"fetch","commandName":"paste-as-plain-text","preferences":{"autoFetchTitle":"true","showTips":"false"},"argumentValues":{"advancedPasteFormat":"Markdown Link"}}), &[json!(null),json!(url),json!({"ok":true,"message":"Pasted text"})]).unwrap();
+    assert_eq!(
+        host.methods_since(mark)[2].1,
+        json!({"text":format!("[Saved & Exact]({url})")})
+    );
+    server.join().unwrap();
+    host.request("session.dispose", json!({"sessionId":"fetch"}), &[])
+        .unwrap();
+    host.request("shutdown", json!({}), &[]).unwrap();
+    assert!(host.child.wait().unwrap().success());
+}
+
+#[test]
+fn managed_cache_files_repair_previous_empty_import_over_real_pipes() {
+    let manifest: Value = serde_json::from_str(include_str!("../../extension.json")).unwrap();
+    for (key, relative) in manifest["migrationPaths"].as_object().unwrap() {
+        if key == "nativeStore" {
+            continue;
+        }
+        let dir = tempfile::tempdir().unwrap();
+        let legacy = dir.path().join(relative.as_str().unwrap());
+        std::fs::create_dir_all(legacy.parent().unwrap()).unwrap();
+        let bytes = b"{\n \"PasteAs\":\"Number\", \"private-source-key\":1\n}\n";
+        std::fs::write(&legacy, bytes).unwrap();
+        let data = dir.path().join("data");
+        let private = data.join("paste-as-plain-text/storage.json");
+        std::fs::create_dir_all(private.parent().unwrap()).unwrap();
+        std::fs::write(
+            &private,
+            br#"{"_legacyArgsImported":true,"private-key":"kept"}"#,
+        )
+        .unwrap();
+        let mut host = FakeHost::spawn();
+        host.recv();
+        host.request("initialize",json!({"protocol":1,"extensionId":ID,"platform":"macOS","packageDir":dir.path().join("package"),"dataDir":data,"tempDir":dir.path().join("tmp"),"grantedCapabilities":manifest["capabilities"],"reason":"command","migrationPaths":{key:legacy}}),&[]).unwrap();
+        let mark = host.reverse.len();
+        let result = host.request("session.open",json!({"sessionId":"migrated","commandName":"paste-as-plain-text","preferences":{"showTips":"false"}}),&[json!(null),json!("a 1,234 b"),json!({"ok":true,"message":"Pasted text"})]).unwrap();
+        assert_eq!(result, json!({"ok":true,"mode":"no-view","message":""}));
+        assert_eq!(
+            host.methods_since(mark)[2].1,
+            json!({"text":"1234"}),
+            "manifest path {key}"
+        );
+        let migrated: Value = serde_json::from_slice(&std::fs::read(private).unwrap()).unwrap();
+        assert_eq!(
+            migrated,
+            json!({"_legacyArgsImported":true,"private-key":"kept","Args":{"PasteAs":"Number"}})
+        );
+        assert_eq!(std::fs::read(legacy).unwrap(), bytes);
+        host.request("session.dispose", json!({"sessionId":"migrated"}), &[])
+            .unwrap();
+        host.request("shutdown", json!({}), &[]).unwrap();
+        assert!(host.child.wait().unwrap().success());
+    }
 }

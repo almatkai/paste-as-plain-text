@@ -9,7 +9,14 @@ use tezbar_paste_as_plain_text::SLUG;
 pub const IMPORTED: &str = "_legacyArgsImported";
 /// Keys of `migrationPaths` in extension.json, highest priority first.
 pub const NATIVE_STORE: &str = "nativeStore";
-pub const LEGACY_CACHE: [&str; 2] = ["legacyArgsCache", "legacyRaycastArgsCache"];
+pub const LEGACY_CACHE: [&str; 6] = [
+    "legacyArgsCache",
+    "legacyRaycastArgsCache",
+    "managedArgsCache",
+    "managedRaycastArgsCache",
+    "registryArgsCache",
+    "registryRaycastArgsCache",
+];
 
 async fn read(path: &std::path::Path) -> Result<Option<Vec<u8>>, String> {
     match tokio::fs::read(path).await {
@@ -77,7 +84,10 @@ pub async fn initialize(ctx: &ExtensionContext) -> CoreResult {
         eprintln!("paste-as-plain-text: store invalid, migration skipped: {error}");
         return Ok(current);
     }
-    if current[IMPORTED] == true {
+    // The first package marked empty stores imported before it knew all managed
+    // roots. Repair that marker only while no private choice exists. An explicit
+    // empty string is an intentional Plain Text choice and must never reimport.
+    if current.get("Args").and_then(|a| a.get("PasteAs")).is_some() {
         return Ok(current);
     }
     let choice = match native_choice(ctx).await {
@@ -88,6 +98,9 @@ pub async fn initialize(ctx: &ExtensionContext) -> CoreResult {
             return Ok(current);
         }
     };
+    if current[IMPORTED] == true && choice.is_none() {
+        return Ok(current);
+    }
     update_store(ctx, SLUG, move |store| {
         cached(store)?;
         let has_current = store.get("Args").and_then(|a| a.get("PasteAs")).is_some();

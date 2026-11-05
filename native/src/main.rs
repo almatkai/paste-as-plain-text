@@ -12,6 +12,35 @@ use tezbar_extension_sdk::{BoxFuture, CoreResult, Extension, ExtensionContext};
 pub const ID: &str = "com.tezbar.native.paste-as-plain-text";
 
 struct Adapter;
+
+/// Saved checkbox preferences may be strings in the current host. Convert only
+/// its two supported encodings; leave absent defaults and malformed values to
+/// the engine's explicit validation (and normal failure-notice path).
+fn normalize_preferences(payload: &Value) -> Value {
+    let mut payload = payload.clone();
+    if let Some(prefs) = payload
+        .get_mut("preferences")
+        .and_then(Value::as_object_mut)
+    {
+        for key in [
+            "trimStart",
+            "trimEnd",
+            "cleanLineBreaks",
+            "autoFetchTitle",
+            "replaceClipboard",
+            "showTips",
+        ] {
+            if let Some(value) = prefs.get_mut(key) {
+                match value.as_str() {
+                    Some("true") => *value = json!(true),
+                    Some("false") => *value = json!(false),
+                    _ => {}
+                }
+            }
+        }
+    }
+    payload
+}
 impl Extension for Adapter {
     fn id(&self) -> &'static str {
         ID
@@ -43,7 +72,8 @@ impl Extension for Adapter {
                 return Err("This no-view command has no bound actions".into());
             }
             let host = host::ProcessHost::system(ctx);
-            tezbar_paste_as_plain_text::handle(&host, command, operation, payload, state).await
+            let payload = normalize_preferences(payload);
+            tezbar_paste_as_plain_text::handle(&host, command, operation, &payload, state).await
         })
     }
 }

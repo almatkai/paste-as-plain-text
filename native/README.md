@@ -30,8 +30,10 @@ The single source command `paste-as-plain-text` (title **Paste as**, subtitle
 
 The six original preferences and defaults are preserved: `trimStart`, `trimEnd`,
 `autoFetchTitle`, `showTips` default true; `cleanLineBreaks`, `replaceClipboard`
-default false. Empty clipboard text fails before file lookup. Whitespace-only
-text may become an empty paste. Failed format detection falls back to text;
+default false. At the process boundary all six accept booleans or saved strings
+`"true"`/`"false"`; other values remain explicit validation errors. Absent values
+retain the engine defaults. Empty clipboard text fails before file lookup.
+Whitespace-only text may become an empty paste. Failed format detection falls back to text;
 Markdown always applies its final trim. See the detailed
 [engine behavior and JSON5 limits](../v2/README.md#behavior).
 
@@ -41,7 +43,8 @@ dispose no-view sessions. This command has no view or bound actions; forged
 unsupported operations cannot rerun a paste. The original no-view result shape
 is preserved. The adapter requests only `clipboard.read`, `clipboard.write`,
 `clipboard.writeFiles`, `clipboard.paste`, `clipboard.pasteText` and
-`window.visibility`. It does not use broad host grants or custom host channels.
+`window.visibility`, plus the exact `notifications.show` grant for terminal
+feedback. It does not use broad host grants or custom host channels.
 
 ## Storage migration
 
@@ -54,13 +57,21 @@ imports the choice once, only from paths granted through manifest migration keys
 2. `nativeStore`: `native-extensions-v2/paste-as-plain-text/storage.json`.
 3. `legacyArgsCache`: `extensions/paste-as-plain-text/.tezbar-support/cache/Args.json`.
 4. `legacyRaycastArgsCache`: `extensions/raycast.paste-as-plain-text/.tezbar-support/cache/Args.json`.
+5. `managedArgsCache`: `extensions/packages/paste-as-plain-text/.tezbar-support/cache/Args.json`.
+6. `managedRaycastArgsCache`: `extensions/packages/raycast.paste-as-plain-text/.tezbar-support/cache/Args.json`.
+7. `registryArgsCache`: `extension-registry/packages/paste-as-plain-text/.tezbar-support/cache/Args.json`.
+8. `registryRaycastArgsCache`: `extension-registry/packages/raycast.paste-as-plain-text/.tezbar-support/cache/Args.json`.
 
+The order above is deterministic; each grant is one file, never a package tree.
 Migration sources are never changed. A corrupt current/native store is preserved;
 the process still becomes ready and commands report current-store errors. A
 corrupt previous native store leaves import pending rather than importing a
 lower-priority cache. Malformed legacy JSON is treated as empty, as in the JS
-cache shim. The marker `_legacyArgsImported` prevents later reimport. No migration
-path or pinned host fixture is needed for a clean install.
+cache shim. Existing private choices (including `""`) prevent reimport. An older
+`_legacyArgsImported=true` store without `Args/PasteAs` is retried, repairing
+previously overlooked managed roots. A repeated empty import does not rewrite the
+store, and a malformed private value is preserved for explicit command failure.
+No migration path or pinned host fixture is needed for a clean install.
 
 ## Build, test and package
 
@@ -81,14 +92,22 @@ cargo +1.85.0 build --release --locked -j2 --target aarch64-apple-darwin
 python3 scripts/package.py --target aarch64-apple-darwin \
   --binary target/aarch64-apple-darwin/release/tezbar-paste-as-plain-text
 python3 scripts/smoke-package.py dist/paste-as-plain-text-aarch64-apple-darwin.zip
+# Optional read-only integration against a current host checkout (needs its TypeScript):
+python3 scripts/smoke-package.py dist/paste-as-plain-text-aarch64-apple-darwin.zip \
+  --renderer-host /path/to/Tezbar
 ```
 
 The tests use recording host transports and stubbed OS runners; HTTP tests use
 loopback only. They never launch the GUI or change the real clipboard. The
 extracted-ZIP smoke uses a minimal environment and scripted narrow host responses
-for real JSONL hello/initialize, six text modes and fallback/error paths, session
-calls, disposal and shutdown. File behavior is tested with temporary paths and
-recorded helper plans, not by invoking the user's OS clipboard.
+for real JSONL hello/initialize, six text modes and fallback/error paths, saved
+string preferences (including six malformed-value failures), session calls,
+disposal and shutdown. Process tests also prove title fetch on/off against a
+loopback listener. `--renderer-host` extracts and executes the actual current
+App hotkey callback and CommandBar launcher consumer with package results. It
+verifies that notification requests carry terminal messages independently of
+those consumers, while Show Tips=false suppresses success requests. File behavior
+is tested with temporary paths and recorded helper plans, not by invoking the user's OS clipboard.
 
 On an actual Windows x64 MSVC build host, use the same locked Rust 1.85 toolchain:
 
@@ -104,9 +123,15 @@ python scripts/smoke-package.py dist/paste-as-plain-text-x86_64-pc-windows-msvc.
 Windows commands are instructions, not claimed results. Package on its target OS:
 the packager executes the binary to check its identity and command inventory.
 After an intentional dependency update, regenerate the per-target dependency
-license inventory with `python3 scripts/package.py --write-third-party`, review
-it and commit the lock/inventory. Packaging refuses a stale inventory or a changed
-SDK pin. Do not commit `target/`, `dist/` or compiled output.
+license inventory with `python3 scripts/package.py --write-third-party` and
+`python3 scripts/vendor-licenses.py`, review them and commit the lock/inventory.
+The latter covers locked normal and build dependencies for both targets (including
+proc macros), excludes development-only crates and vendors exact upstream license,
+notice and copyright files. For crates missing packaged documents,
+`licenses/supplemental/index.json` records exact-source attribution and standard
+license texts, or documents from the crate's immutable upstream revision.
+All Markdown document links use POSIX separators on Windows too. Packaging refuses
+a stale inventory or a changed SDK pin. Do not commit `target/`, `dist/` or compiled output.
 
 Each target package produces these files under `dist/`:
 
@@ -120,7 +145,9 @@ The ZIP contains root `extension.json`, `bin/tezbar-paste-as-plain-text[.exe]`,
 `licenses/`. Its `files` object inventories every member except the self-referential
 manifest. Scripts verify the inventory, icon, executable mode, identity and
 command coverage. ZIP timestamps are fixed. Licenses retain original MIT credits,
-the SDK Apache-2.0 license/NOTICE, and a per-target linked-crate license inventory.
+the SDK Apache-2.0 license/NOTICE, a per-target linked-crate license inventory and
+`licenses/THIRD_PARTY.md` / `dependency-license-index.json` with the full
+both-target normal/build dependency notice closure.
 
 ## Compatibility and QA status
 
@@ -130,9 +157,20 @@ source/host differences remain explicit and are not a claim of complete parity:
 - Tezbar's text paste writes transformed text to the clipboard; it cannot restore
   the original rich clipboard when `replaceClipboard=false`. With true the
   extension explicitly copies again after successful paste, as in the source.
-- Protocol 1 has no dynamic command-subtitle update or toast/HUD API. Animated
-  feedback is omitted; success uses the original final no-view message, suppressed
-  with `showTips=false`. Failures return an error and attempt to reveal the launcher.
+- Protocol 1 has no dynamic command-subtitle update or animated toast/HUD API.
+  Terminal success and failure use the current host's typed
+  `host.notifications.show` (`id`, `title`, `body`; successful reply `true`).
+  This OS notification channel works independently of the hidden launcher and
+  ignored no-view hotkey results. Show Tips=false suppresses success tips and the
+  returned success message; errors still report their original detail, as in the
+  source. No animated/progress notification is emitted. A stable `paste-result`
+  ID replaces the previous terminal notice and bounds host resource ownership to
+  one notification; current host semantics retain the process while that resource
+  exists and clean it up on process/app shutdown. Notification permission and OS
+  presentation rules apply (macOS requires a packaged Tezbar app). If submission
+  fails, stderr reports it without masking the original paste outcome or retrying
+  a completed paste. No visible-feedback parity is claimed under permission denial;
+  actual notification delivery still needs desktop QA. Tests never send OS notices.
 - The reused JSON5 parser deliberately falls back to transformed plain text for
   `+Infinity`, `+NaN`, signed hex, integers outside i64, hex outside u32, overflowing
   exponents, unpaired surrogates, input over 1 MiB or nesting over 64. See the

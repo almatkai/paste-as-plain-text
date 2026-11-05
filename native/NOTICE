@@ -16,3 +16,8 @@ licenses: predominantly MIT and/or Apache-2.0, plus Unicode-3.0, ISC, Zlib,
 BSD-3-Clause, and MPL-2.0 for the unmodified cssparser, cssparser-macros,
 dtoa-short and selectors crates used by
 scraper (source: crates.io, versions as listed). No trademark rights are claimed.
+
+The complete locked normal/build dependency license and notice closure for both
+published targets is bundled under licenses/crates and licenses/supplemental.
+See licenses/THIRD_PARTY.md and licenses/dependency-license-index.json, including
+provenance for packages whose published crates omit standalone license documents.

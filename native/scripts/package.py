@@ -4,7 +4,7 @@
 Layout: extension.json, bin/tezbar-<slug>[.exe], resources/**, licenses/**,
 LICENSE, NOTICE. `files` inventories every member except extension.json.
 """
-import argparse, hashlib, json, re, shutil, stat, struct, subprocess, tempfile, zipfile
+import argparse, hashlib, json, re, shutil, stat, struct, subprocess, sys, tempfile, zipfile
 from pathlib import Path
 
 CRATE = Path(__file__).resolve().parents[1]  # Rust process crate (native/)
@@ -83,6 +83,8 @@ def build(target, binary, output):
     check_sdk()
     check_binary_target(binary, target)
     check_third_party()
+    subprocess.check_call([sys.executable,
+                           str(CRATE / 'scripts/vendor-licenses.py'), '--check'], cwd=CRATE)
     windows = TARGETS[target]
     manifest = json.loads((REPO / 'extension.json').read_text())
     slug = manifest['slug']

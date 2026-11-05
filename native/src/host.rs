@@ -160,16 +160,26 @@ impl<R: Runner> Host for ProcessHost<'_, R> {
             Content::File(path) => self.write_file_clipboard(path).await,
         }
     }
-    async fn notice(&self, style: Notice, _title: &str) {
-        // Protocol 1 has no toast/HUD host API and process hosts reject custom
-        // events. Success text is returned in the no-view result; failures are
-        // returned as the session error. Reveal the launcher so the renderer can
-        // show it after the initial hide; a reveal failure must not mask it.
-        if style == Notice::Failure {
-            let _ = self
-                .ctx
-                .host("host.window.visibility", json!({"visible":true}))
-                .await;
+    async fn notice(&self, style: Notice, title: &str) {
+        // No-view hotkey results have no renderer notice consumer; pasteText
+        // also hides the launcher. Use the actual typed OS-notification API for
+        // terminal notices, independently of both renderer paths. A stable ID
+        // replaces our last notice and bounds the host-owned resource to one.
+        // Animated progress has no equivalent. The engine suppresses success
+        // notices when Show Tips is false; failures always retain their detail.
+        if style == Notice::Animated {
+            return;
+        }
+        if let Err(error) = self
+            .call(
+                "host.notifications.show",
+                json!({"id":"paste-result", "title":"Paste as Plain Text", "body":title}),
+            )
+            .await
+        {
+            // Notification permission/delivery failure must not obscure a paste
+            // error or imply the paste itself failed after it already happened.
+            eprintln!("paste-as-plain-text: terminal notification failed: {error}");
         }
     }
 }

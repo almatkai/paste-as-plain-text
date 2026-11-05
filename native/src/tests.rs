@@ -19,6 +19,7 @@ const CAPS: &[&str] = &[
     "clipboard.paste",
     "clipboard.pasteText",
     "window.visibility",
+    "notifications.show",
 ];
 
 #[derive(Clone, Default)]
@@ -57,6 +58,7 @@ async fn run(t: &TestContext, runner: StubRunner, payload: Value) -> Result<Valu
         platform: Platform::MacOS,
     };
     let mut state = json!({});
+    let payload = crate::normalize_preferences(&payload);
     t.run(handle(
         &host,
         SLUG,
@@ -73,7 +75,8 @@ async fn number_mode_pastes_through_typed_host_and_caches_choice() {
     let t = fixture(dir.path(), CAPS);
     t.reply(Ok(json!(null))); // window.visibility false
     t.reply(Ok(json!("Total 123,456.7 units"))); // clipboard.read
-    t.reply(Ok(json!({"ok":true}))); // pasteText
+    t.reply(Ok(json!({"ok":true,"message":"Pasted text"}))); // pasteText
+    t.reply(Ok(json!(true))); // notifications.show
     let result = run(
         &t,
         StubRunner::default(),
@@ -91,7 +94,8 @@ async fn number_mode_pastes_through_typed_host_and_caches_choice() {
         [
             "host.window.visibility",
             "host.clipboard.read",
-            "host.clipboard.pasteText"
+            "host.clipboard.pasteText",
+            "host.notifications.show"
         ]
     );
     assert_eq!(calls[0]["params"], json!({"visible":false}));
@@ -116,7 +120,7 @@ async fn omitted_argument_reads_cache_and_explicit_empty_clears_it() {
     for reply in [
         json!(null),
         json!("see https://example.com/a?b=1 now"),
-        json!(null),
+        json!({"ok":true,"message":"Pasted text"}),
     ] {
         t.reply(Ok(reply));
     }
@@ -133,7 +137,8 @@ async fn omitted_argument_reads_cache_and_explicit_empty_clears_it() {
     for reply in [
         json!(null),
         json!("see https://example.com now"),
-        json!(null),
+        json!({"ok":true,"message":"Pasted text"}),
+        json!(true),
     ] {
         t.reply(Ok(reply));
     }
@@ -155,12 +160,12 @@ async fn omitted_argument_reads_cache_and_explicit_empty_clears_it() {
 }
 
 #[tokio::test]
-async fn empty_clipboard_fails_reveals_window_and_never_pastes() {
+async fn empty_clipboard_notifies_failure_and_never_pastes() {
     let dir = tempfile::tempdir().unwrap();
     let t = fixture(dir.path(), CAPS);
     t.reply(Ok(json!(null)));
     t.reply(Ok(json!("")));
-    t.reply(Ok(json!(null)));
+    t.reply(Ok(json!(true)));
     let error = run(&t, StubRunner::default(), json!({})).await.unwrap_err();
     assert_eq!(error, "No content in clipboard");
     let calls = t.calls();
@@ -169,10 +174,13 @@ async fn empty_clipboard_fails_reveals_window_and_never_pastes() {
         [
             "host.window.visibility",
             "host.clipboard.read",
-            "host.window.visibility"
+            "host.notifications.show"
         ]
     );
-    assert_eq!(calls[2]["params"], json!({"visible":true}));
+    assert_eq!(
+        calls[2]["params"],
+        json!({"id":"paste-result","title":"Paste as Plain Text","body":"No content in clipboard"})
+    );
 }
 
 #[tokio::test]
@@ -182,7 +190,7 @@ async fn failed_paste_is_an_error_without_success_or_recopy() {
     t.reply(Ok(json!(null)));
     t.reply(Ok(json!("text")));
     t.reply(Ok(json!({"ok":false,"error":"Accessibility denied"})));
-    t.reply(Err("reveal failed".into()));
+    t.reply(Err("notification permission denied".into()));
     let error = run(
         &t,
         StubRunner::default(),
@@ -192,7 +200,7 @@ async fn failed_paste_is_an_error_without_success_or_recopy() {
     .unwrap_err();
     assert_eq!(
         error, "Accessibility denied",
-        "reveal failure does not mask"
+        "notification failure does not mask"
     );
     assert_eq!(
         methods(&t.calls()),
@@ -200,7 +208,7 @@ async fn failed_paste_is_an_error_without_success_or_recopy() {
             "host.window.visibility",
             "host.clipboard.read",
             "host.clipboard.pasteText",
-            "host.window.visibility"
+            "host.notifications.show"
         ]
     );
 }
@@ -209,7 +217,13 @@ async fn failed_paste_is_an_error_without_success_or_recopy() {
 async fn replace_clipboard_recopies_text_after_successful_paste() {
     let dir = tempfile::tempdir().unwrap();
     let t = fixture(dir.path(), CAPS);
-    for reply in [json!(null), json!("{a:1,}"), json!(null), json!(null)] {
+    for reply in [
+        json!(null),
+        json!("{a:1,}"),
+        json!({"ok":true,"message":"Pasted text"}),
+        json!({"ok":true}),
+        json!(true),
+    ] {
         t.reply(Ok(reply));
     }
     let result = run(
@@ -223,7 +237,11 @@ async fn replace_clipboard_recopies_text_after_successful_paste() {
     let calls = t.calls();
     assert_eq!(
         methods(&calls)[2..],
-        ["host.clipboard.pasteText", "host.clipboard.write"]
+        [
+            "host.clipboard.pasteText",
+            "host.clipboard.write",
+            "host.notifications.show"
+        ]
     );
     assert_eq!(calls[2]["params"]["text"], "{\n  \"a\": 1\n}");
     assert_eq!(calls[3]["params"]["text"], "{\n  \"a\": 1\n}");
@@ -239,7 +257,8 @@ async fn regular_file_uses_typed_write_files_then_paste() {
         json!(null),
         json!("ignored text"),
         json!(true),
-        json!(null),
+        json!({"ok":true,"message":"Pasted text"}),
+        json!(true),
         json!(true),
     ] {
         t.reply(Ok(reply));
@@ -262,7 +281,8 @@ async fn regular_file_uses_typed_write_files_then_paste() {
         [
             "host.clipboard.writeFiles",
             "host.clipboard.paste",
-            "host.clipboard.writeFiles"
+            "host.clipboard.writeFiles",
+            "host.notifications.show"
         ]
     );
     assert_eq!(
@@ -282,7 +302,12 @@ async fn directory_uses_constant_script_helper_with_path_as_data() {
     let folder = dir.path().join("folder");
     std::fs::create_dir(&folder).unwrap();
     let t = fixture(dir.path(), CAPS);
-    for reply in [json!(null), json!(folder.to_str().unwrap()), json!(null)] {
+    for reply in [
+        json!(null),
+        json!(folder.to_str().unwrap()),
+        json!({"ok":true,"message":"Pasted text"}),
+        json!(true),
+    ] {
         t.reply(Ok(reply));
     }
     let runner = StubRunner::default(); // no clipboard file reference
@@ -294,7 +319,10 @@ async fn directory_uses_constant_script_helper_with_path_as_data() {
     .await
     .unwrap();
     assert_eq!(result["message"], "📄 Paste as File");
-    assert_eq!(methods(&t.calls())[2..], ["host.clipboard.paste"]);
+    assert_eq!(
+        methods(&t.calls())[2..],
+        ["host.clipboard.paste", "host.notifications.show"]
+    );
     let plans = runner.plans.lock().unwrap();
     assert_eq!(plans.len(), 2);
     assert_eq!(plans[1].args.last().unwrap(), folder.to_str().unwrap());
@@ -305,7 +333,12 @@ async fn directory_uses_constant_script_helper_with_path_as_data() {
 async fn relative_or_missing_paths_fall_back_to_text() {
     let dir = tempfile::tempdir().unwrap();
     let t = fixture(dir.path(), CAPS);
-    for reply in [json!(null), json!("Cargo.toml"), json!(null)] {
+    for reply in [
+        json!(null),
+        json!("Cargo.toml"),
+        json!({"ok":true,"message":"Pasted text"}),
+        json!(true),
+    ] {
         t.reply(Ok(reply));
     }
     let result = run(
@@ -369,7 +402,7 @@ async fn failed_clipboard_read_preserves_the_host_error() {
     let t = fixture(dir.path(), CAPS);
     t.reply(Ok(json!(null)));
     t.reply(Ok(json!({"ok":false,"message":"Clipboard access denied"})));
-    t.reply(Ok(json!(null)));
+    t.reply(Ok(json!(true)));
     assert_eq!(
         run(&t, StubRunner::default(), json!({})).await.unwrap_err(),
         "Clipboard access denied"
@@ -379,7 +412,7 @@ async fn failed_clipboard_read_preserves_the_host_error() {
         [
             "host.window.visibility",
             "host.clipboard.read",
-            "host.window.visibility"
+            "host.notifications.show"
         ]
     );
 }
@@ -394,7 +427,7 @@ async fn corrupt_cache_fails_without_replacing_data() {
     })
     .await
     .unwrap();
-    t.reply(Ok(json!(null)));
+    t.reply(Ok(json!(true)));
     let error = run(
         &t,
         StubRunner::default(),
@@ -514,6 +547,166 @@ async fn existing_choice_wins_and_corrupt_data_never_blocks_readiness() {
     std::fs::write(&path, b"{broken").unwrap();
     assert!(migration::initialize(&t.context).await.is_ok());
     assert_eq!(std::fs::read(&path).unwrap(), b"{broken");
-    t.reply(Ok(json!(null)));
+    t.reply(Ok(json!(true)));
     assert!(run(&t, StubRunner::default(), json!({})).await.is_err());
+}
+
+#[test]
+fn all_saved_checkboxes_normalize_only_host_supported_encodings() {
+    use tezbar_paste_as_plain_text::Preferences;
+    let keys = [
+        "trimStart",
+        "trimEnd",
+        "cleanLineBreaks",
+        "autoFetchTitle",
+        "replaceClipboard",
+        "showTips",
+    ];
+    assert_eq!(
+        Preferences::from_payload(&crate::normalize_preferences(&json!({}))).unwrap(),
+        Preferences::default()
+    );
+    for key in keys {
+        for value in [true, false] {
+            let saved = json!({"preferences":{key:value.to_string(),"unknown":"true"},"argumentValues":{"advancedPasteFormat":""}});
+            let normalized = crate::normalize_preferences(&saved);
+            assert_eq!(normalized["preferences"][key], value);
+            assert_eq!(normalized["preferences"]["unknown"], "true");
+            assert_eq!(normalized["argumentValues"], saved["argumentValues"]);
+            assert_eq!(
+                saved["preferences"][key],
+                value.to_string(),
+                "caller data stays unchanged"
+            );
+            let boolean = json!({"preferences":{key:value}});
+            assert_eq!(crate::normalize_preferences(&boolean), boolean);
+        }
+        for malformed in [
+            Value::Null,
+            json!(1),
+            json!("TRUE"),
+            json!("False"),
+            json!(" false "),
+            json!([]),
+            json!({}),
+        ] {
+            let payload = json!({"preferences":{key:malformed}});
+            let normalized = crate::normalize_preferences(&payload);
+            assert_eq!(normalized, payload);
+            assert_eq!(
+                Preferences::from_payload(&normalized).unwrap_err(),
+                format!("Preference {key} must be boolean")
+            );
+        }
+    }
+}
+
+#[tokio::test]
+async fn every_declared_legacy_file_repairs_empty_marker_without_changing_source() {
+    let manifest: Value = serde_json::from_str(include_str!("../../extension.json")).unwrap();
+    let paths = manifest["migrationPaths"].as_object().unwrap();
+    assert_eq!(
+        paths.len(),
+        7,
+        "one native store plus six individual JS files"
+    );
+    for key in migration::LEGACY_CACHE {
+        let dir = tempfile::tempdir().unwrap();
+        let legacy = dir.path().join(paths[key].as_str().unwrap());
+        assert_eq!(legacy.file_name().unwrap(), "Args.json");
+        std::fs::create_dir_all(legacy.parent().unwrap()).unwrap();
+        let bytes = b"{\n  \"PasteAs\": \"Number\", \"unrelated\": \"preserve\"\n}\n";
+        std::fs::write(&legacy, bytes).unwrap();
+        let mut t = fixture(dir.path(), CAPS);
+        grant(&mut t, key, &legacy);
+        update_store(&t.context, SLUG, |s| {
+            *s = json!({migration::IMPORTED:true,"Args":{"other":"private"},"other":17});
+            Ok(())
+        })
+        .await
+        .unwrap();
+        let store = migration::initialize(&t.context).await.unwrap();
+        assert_eq!(
+            store,
+            json!({migration::IMPORTED:true,"Args":{"PasteAs":"Number","other":"private"},"other":17})
+        );
+        let current = dir.path().join("data").join(SLUG).join("storage.json");
+        let first_bytes = std::fs::read(&current).unwrap();
+        std::fs::write(&legacy, br#"{"PasteAs":"URL"}"#).unwrap();
+        assert_eq!(migration::initialize(&t.context).await.unwrap(), store);
+        assert_eq!(
+            std::fs::read(current).unwrap(),
+            first_bytes,
+            "repeat does not rewrite private store"
+        );
+        // The only source modification above was the test's explicit simulated update.
+        std::fs::write(&legacy, bytes).unwrap();
+        migration::initialize(&t.context).await.unwrap();
+        assert_eq!(std::fs::read(legacy).unwrap(), bytes);
+    }
+}
+
+#[tokio::test]
+async fn legacy_precedence_retry_and_private_ownership_are_deterministic() {
+    let dir = tempfile::tempdir().unwrap();
+    let mut t = fixture(dir.path(), CAPS);
+    let sources: Vec<_> = migration::LEGACY_CACHE
+        .iter()
+        .enumerate()
+        .map(|(i, key)| {
+            let path = dir.path().join(format!("{key}.json"));
+            std::fs::write(
+                &path,
+                serde_json::to_vec(&json!({"PasteAs":format!("choice-{i}")})).unwrap(),
+            )
+            .unwrap();
+            grant(&mut t, key, &path);
+            path
+        })
+        .collect();
+    // Each next source wins only after every higher-priority file is malformed.
+    for (i, path) in sources.iter().enumerate() {
+        update_store(&t.context, SLUG, |s| {
+            *s = json!({migration::IMPORTED:true});
+            Ok(())
+        })
+        .await
+        .unwrap();
+        assert_eq!(
+            migration::initialize(&t.context).await.unwrap()["Args"]["PasteAs"],
+            format!("choice-{i}")
+        );
+        std::fs::write(path, b"{broken").unwrap();
+    }
+    update_store(&t.context, SLUG, |s| {
+        *s = json!({migration::IMPORTED:true});
+        Ok(())
+    })
+    .await
+    .unwrap();
+    let empty = migration::initialize(&t.context).await.unwrap();
+    assert_eq!(empty, json!({migration::IMPORTED:true}));
+    std::fs::write(&sources[5], br#"{"PasteAs":"JSON"}"#).unwrap();
+    assert_eq!(
+        migration::initialize(&t.context).await.unwrap()["Args"]["PasteAs"],
+        "JSON",
+        "missing/malformed sources can retry after corrective grant"
+    );
+    for choice in [json!(""), json!("URL"), Value::Null, json!(false)] {
+        let private = json!({migration::IMPORTED:true,"Args":{"PasteAs":choice},"private":"kept"});
+        update_store(&t.context, SLUG, move |s| {
+            *s = private;
+            Ok(())
+        })
+        .await
+        .unwrap();
+        let path = dir.path().join("data").join(SLUG).join("storage.json");
+        let bytes = std::fs::read(&path).unwrap();
+        migration::initialize(&t.context).await.unwrap();
+        assert_eq!(
+            std::fs::read(path).unwrap(),
+            bytes,
+            "intentional or invalid private choice is never replaced"
+        );
+    }
 }

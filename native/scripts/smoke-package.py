@@ -16,7 +16,7 @@ from pathlib import Path, PurePosixPath
 FRAME = 16 * 1024 * 1024
 
 
-def smoke(path, scenario):
+def smoke(path, scenario, renderer_host=None):
     with tempfile.TemporaryDirectory() as temp, zipfile.ZipFile(path) as archive:
         root = Path(temp) / 'package'; root.mkdir()
         names = archive.namelist(); assert len(names) == len(set(names)), 'Duplicate ZIP paths'
@@ -46,6 +46,8 @@ def smoke(path, scenario):
         assert set(info['commands']) == expected, 'Command inventory mismatch'
         process = subprocess.Popen([str(binary)], cwd=root, env=env, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=None)
         messages = queue.Queue()
+        transcript = []
+        reverse = []
 
         def reader():
             try:
@@ -67,6 +69,7 @@ def smoke(path, scenario):
             process.stdin.write((json.dumps(value) + '\n').encode()); process.stdin.flush()
 
         def request(method, params, replies=()):
+            reverse.clear()
             ident = 'h:' + str(uuid.uuid4())
             send({'type': 'request', 'id': ident, 'method': method, 'params': params})
             replies = list(replies)
@@ -76,6 +79,7 @@ def smoke(path, scenario):
                     assert not replies, 'Scripted reverse replies left unused: ' + json.dumps(replies)
                     return frame
                 if frame['type'] == 'request':
+                    reverse.append(frame)
                     assert replies, 'Unscripted reverse request (refusing real effects): ' + json.dumps(frame)
                     step = replies.pop(0)
                     assert frame['method'] == step['method'], f"Expected {step['method']}, got {frame['method']}"
@@ -104,6 +108,7 @@ def smoke(path, scenario):
                 assert params['commandName'] in info['commands']
                 frame = request('session.open', params, session.get('replies', []))
                 check(frame, session['expect'])
+                transcript.append({'open': params, 'frame': frame, 'reverse': list(reverse)})
                 if 'error' not in session['expect']:
                     for call in session.get('calls', []):
                         check(request('session.call', {'sessionId': params['sessionId'],
@@ -115,10 +120,14 @@ def smoke(path, scenario):
         finally:
             if process.poll() is None: process.kill(); process.wait(timeout=5)
             process.stdin.close(); process.stdout.close()
+        if renderer_host:
+            subprocess.run(['node', str(Path(__file__).with_name('renderer-consumer.mjs')), str(renderer_host)],
+                           input=json.dumps(transcript), text=True, check=True)
         print(slug, f"ZIP inventory + protocol-info/hello/initialize/{len(scenario['sessions'])} scripted sessions/calls/dispose/shutdown passed (offline, no installation)")
 
 
 if __name__ == '__main__':
     p = argparse.ArgumentParser(); p.add_argument('archive', type=Path)
     p.add_argument('--scenario', type=Path, default=Path(__file__).resolve().parents[1] / 'tests' / 'smoke-scenario.json')
-    a = p.parse_args(); smoke(a.archive, json.loads(a.scenario.read_text()))
+    p.add_argument('--renderer-host', type=Path, help='Read-only current host checkout; execute its actual renderer consumers on package results')
+    a = p.parse_args(); smoke(a.archive, json.loads(a.scenario.read_text()), a.renderer_host)

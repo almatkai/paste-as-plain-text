@@ -142,12 +142,17 @@
     "clipboard.writeFiles",
     "clipboard.paste",
     "clipboard.pasteText",
-    "window.visibility"
+    "window.visibility",
+    "notifications.show"
   ],
   "migrationPaths": {
     "nativeStore": "native-extensions-v2/paste-as-plain-text/storage.json",
     "legacyArgsCache": "extensions/paste-as-plain-text/.tezbar-support/cache/Args.json",
-    "legacyRaycastArgsCache": "extensions/raycast.paste-as-plain-text/.tezbar-support/cache/Args.json"
+    "legacyRaycastArgsCache": "extensions/raycast.paste-as-plain-text/.tezbar-support/cache/Args.json",
+    "managedArgsCache": "extensions/packages/paste-as-plain-text/.tezbar-support/cache/Args.json",
+    "managedRaycastArgsCache": "extensions/packages/raycast.paste-as-plain-text/.tezbar-support/cache/Args.json",
+    "registryArgsCache": "extension-registry/packages/paste-as-plain-text/.tezbar-support/cache/Args.json",
+    "registryRaycastArgsCache": "extension-registry/packages/raycast.paste-as-plain-text/.tezbar-support/cache/Args.json"
   },
   "files": {}
 }
