@@ -130,4 +130,4 @@ if __name__ == '__main__':
     p = argparse.ArgumentParser(); p.add_argument('archive', type=Path)
     p.add_argument('--scenario', type=Path, default=Path(__file__).resolve().parents[1] / 'tests' / 'smoke-scenario.json')
     p.add_argument('--renderer-host', type=Path, help='Read-only current host checkout; execute its actual renderer consumers on package results')
-    a = p.parse_args(); smoke(a.archive, json.loads(a.scenario.read_text()), a.renderer_host)
+    a = p.parse_args(); smoke(a.archive, json.loads(a.scenario.read_text(encoding='utf-8')), a.renderer_host)
