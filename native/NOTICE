@@ -1,0 +1,18 @@
+Paste as Plain Text — standalone Tezbar process extension
+
+Original Raycast extension "paste-as-plain-text" by koinzhang, with contributions
+by pantajoe, kero13 and ridemountainpig (raycast/extensions commit
+6734d85992290066fd31a7f5bee3cca3d3545a1a, path extensions/paste-as-plain-text).
+Tezbar Rust port: almatkai. Extension code is MIT (LICENSE).
+
+resources/assets/paste-icon.png is byte-exact from that upstream commit
+(290,928 bytes, SHA-256
+290e0ae7fdd36df2d095e28bd5b9292c470dc3d0273e23b978500935e44b67dd).
+
+The executable statically links the Tezbar Rust extension SDK (Apache-2.0,
+licenses/tezbar-extension-sdk-Apache-2.0.txt and its NOTICE) and the third-party
+Rust crates listed in licenses/THIRD-PARTY-CRATES.txt under their own declared
+licenses: predominantly MIT and/or Apache-2.0, plus Unicode-3.0, ISC, Zlib,
+BSD-3-Clause, and MPL-2.0 for the unmodified cssparser, cssparser-macros,
+dtoa-short and selectors crates used by
+scraper (source: crates.io, versions as listed). No trademark rights are claimed.
