@@ -1,0 +1,5 @@
+# Preserve upstream license/notice bytes, including their original line endings.
+native/licenses/** -text
+# Upstream documents deliberately retain their whitespace verbatim.
+native/licenses/crates/** -whitespace
+native/licenses/supplemental/** -whitespace
