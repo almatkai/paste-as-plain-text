@@ -1,5 +1,15 @@
 ## Paste as Plain Text
 
+**Native Rust 1.0.0 for Tezbar:** [release](https://github.com/almatkai/paste-as-plain-text/releases/tag/v1.0.0), [macOS Apple Silicon ZIP](https://github.com/almatkai/paste-as-plain-text/releases/download/v1.0.0/paste-as-plain-text-aarch64-apple-darwin.zip), [Windows x64 ZIP](https://github.com/almatkai/paste-as-plain-text/releases/download/v1.0.0/paste-as-plain-text-x86_64-pc-windows-msvc.zip), [trusted install reference](https://github.com/almatkai/paste-as-plain-text/releases/download/v1.0.0/extension-release.json).
+
+Requires a Tezbar build with schema-3 process extensions and the import CLI. Download the trusted JSON and your platform ZIP, then import:
+
+```sh
+tezbar --extensions-v3-import extension-release.json paste-as-plain-text-<target>.zip
+```
+
+Both native platform builds, extracted-package protocol checks and actual Tezbar CLI installs into isolated profiles passed. [Validation and exact hashes](https://github.com/almatkai/paste-as-plain-text/releases/download/v1.0.0/validation.json) record the tested source. Actual desktop effects remain unverified; Store discovery still needs a Tezbar catalog update.
+
 Paste text from the clipboard as any format you want.
 
 ### Installable native Rust version for Tezbar
@@ -10,9 +20,8 @@ is the schema 3 process manifest: `com.tezbar.native.paste-as-plain-text`, versi
 `1.0.0`, replacing `raycast.paste-as-plain-text`. It preserves the original
 `paste-as-plain-text` command, six preferences, dropdown values and icon.
 
-The macOS Apple Silicon package is built with Rust 1.85 and runs without Node,
-Bun, Cargo or the Tezbar source tree. A Windows x64 package must be built and
-verified separately. Release ZIPs use `extension.json`, `bin/`, `resources/`,
+The macOS Apple Silicon and Windows x64 packages are built with Rust 1.85 and
+run without Node, Bun, Cargo or the Tezbar source tree. Release ZIPs use `extension.json`, `bin/`, `resources/`,
 `licenses/`, `LICENSE` and `NOTICE` at the archive root. See the
 [native build, ZIP smoke test and install handoff](native/README.md).
 
