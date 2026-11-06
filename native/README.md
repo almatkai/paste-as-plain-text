@@ -120,7 +120,7 @@ python scripts/package.py --target x86_64-pc-windows-msvc --binary target/x86_64
 python scripts/smoke-package.py dist/paste-as-plain-text-x86_64-pc-windows-msvc.zip
 ```
 
-Windows commands are instructions, not claimed results. Package on its target OS:
+The published Windows package passed native build and protocol checks. To reproduce, package on its target OS:
 the packager executes the binary to check its identity and command inventory.
 After an intentional dependency update, regenerate the per-target dependency
 license inventory with `python3 scripts/package.py --write-third-party` and
@@ -190,19 +190,18 @@ source/host differences remain explicit and are not a claim of complete parity:
 - Both platform verification entries stay `not-run`: offline protocol tests do
   not establish real clipboard restoration, focus, actual target-app paste,
   Finder/Explorer file transfer, helper availability, permissions or launcher UI QA.
-  Windows build/runtime verification is assigned to the parent rollout.
+  Native Windows build/protocol checks and isolated CLI imports have passed.
 
 ## Install/release handoff
 
 This is a real executable ZIP, with no on-install build or runtime source checkout.
-Independent review, Windows artifacts, actual host install/desktop QA and
-publication are still required. The source and packaged `artifacts` objects are
-empty intentionally: after publishing, the parent must add real HTTPS artifact
-URLs, archive hashes, executable paths and hashes to the trusted host catalog
-before a catalog install can succeed. Do not put a ZIP hash inside its own ZIP.
-The macOS `.artifact.json` and sidecars provide those values. Local development
-ZIP import must use the host's verified package-import path. No host install,
-release, tag, push or publication is performed by this implementation task.
+Independent review, native builds, extracted-package checks and isolated CLI imports
+have passed on macOS and Windows. Both ZIPs and the trusted release reference are
+[published](https://github.com/almatkai/paste-as-plain-text/releases/tag/v1.0.0).
+Actual desktop effects remain unverified. The source/ZIP `artifacts` objects stay
+empty to avoid a circular archive hash; the separate published trusted reference
+pins real per-target URLs, archive hashes and executable hashes. Store catalog
+registration remains separate from this verified manual import path.
 
 ### Handled command failures
 
