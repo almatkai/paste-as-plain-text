@@ -1,0 +1,158 @@
+{
+  "schemaVersion": 3,
+  "id": "com.tezbar.native.paste-as-plain-text",
+  "slug": "paste-as-plain-text",
+  "name": "Paste as Plain Text",
+  "version": "1.0.0",
+  "description": "Paste text from the clipboard as any format.",
+  "author": "almatkai",
+  "icon": "resources/assets/paste-icon.png",
+  "runtime": "rust",
+  "replaces": [
+    "raycast.paste-as-plain-text"
+  ],
+  "platforms": [
+    "macOS",
+    "Windows"
+  ],
+  "preferences": [
+    {
+      "title": "Actions Before Pasting",
+      "label": "Trim Start",
+      "name": "trimStart",
+      "type": "checkbox",
+      "description": "Trim spaces in front of plain text",
+      "default": true,
+      "required": false
+    },
+    {
+      "label": "Trim End",
+      "name": "trimEnd",
+      "type": "checkbox",
+      "description": "Trim spaces at the end of plain text",
+      "default": true,
+      "required": false
+    },
+    {
+      "label": "Clean line breaks",
+      "name": "cleanLineBreaks",
+      "type": "checkbox",
+      "description": "Replace all line breaks with spaces",
+      "default": false,
+      "required": false
+    },
+    {
+      "title": "Actions When Pasting",
+      "name": "autoFetchTitle",
+      "label": "Auto Fetch Title",
+      "type": "checkbox",
+      "description": "Auto fetch title from URL when pasting as Markdown Link and Markdown Image",
+      "required": false,
+      "default": true
+    },
+    {
+      "title": "Actions After Pasting",
+      "name": "replaceClipboard",
+      "label": "Replace Clipboard",
+      "type": "checkbox",
+      "description": "Replace clipboard with pasted text after pasting",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "showTips",
+      "label": "Show Tips",
+      "type": "checkbox",
+      "description": "Show tips after pasting",
+      "required": false,
+      "default": true
+    }
+  ],
+  "commands": [
+    {
+      "name": "paste-as-plain-text",
+      "title": "Paste as",
+      "subtitle": "Plain Text",
+      "description": "Paste text from the clipboard as any format.",
+      "mode": "no-view",
+      "arguments": [
+        {
+          "name": "advancedPasteFormat",
+          "type": "dropdown",
+          "description": "Paste text from the clipboard as any format you want.",
+          "placeholder": "Plain Text",
+          "required": false,
+          "default": "",
+          "data": [
+            {
+              "title": "URL",
+              "value": "URL"
+            },
+            {
+              "title": "File",
+              "value": "File"
+            },
+            {
+              "title": "JSON",
+              "value": "JSON"
+            },
+            {
+              "title": "Number",
+              "value": "Number"
+            },
+            {
+              "title": "Markdown Link",
+              "value": "Markdown Link"
+            },
+            {
+              "title": "Markdown Image",
+              "value": "Markdown Image"
+            }
+          ]
+        }
+      ],
+      "platforms": [
+        "macOS",
+        "Windows"
+      ],
+      "runtime": "rust",
+      "concurrency": "serialize",
+      "refreshMs": null
+    }
+  ],
+  "verification": [
+    {
+      "platform": "macOS",
+      "state": "not-run",
+      "note": "Packaged binary passed offline protocol tests with a recording host. Real clipboard, focus, paste keystroke, Finder file transfer and launcher QA in Tezbar not run."
+    },
+    {
+      "platform": "Windows",
+      "state": "not-run",
+      "note": "No Windows build or runtime test yet."
+    }
+  ],
+  "execution": "process",
+  "protocolVersion": 1,
+  "repository": "https://github.com/almatkai/paste-as-plain-text",
+  "artifacts": {},
+  "capabilities": [
+    "clipboard.read",
+    "clipboard.write",
+    "clipboard.writeFiles",
+    "clipboard.paste",
+    "clipboard.pasteText",
+    "window.visibility",
+    "notifications.show"
+  ],
+  "migrationPaths": {
+    "nativeStore": "native-extensions-v2/paste-as-plain-text/storage.json",
+    "legacyArgsCache": "extensions/paste-as-plain-text/.tezbar-support/cache/Args.json",
+    "legacyRaycastArgsCache": "extensions/raycast.paste-as-plain-text/.tezbar-support/cache/Args.json",
+    "managedArgsCache": "extensions/packages/paste-as-plain-text/.tezbar-support/cache/Args.json",
+    "managedRaycastArgsCache": "extensions/packages/raycast.paste-as-plain-text/.tezbar-support/cache/Args.json",
+    "registryArgsCache": "extension-registry/packages/paste-as-plain-text/.tezbar-support/cache/Args.json",
+    "registryRaycastArgsCache": "extension-registry/packages/raycast.paste-as-plain-text/.tezbar-support/cache/Args.json"
+  },
+  "files": {}
+}

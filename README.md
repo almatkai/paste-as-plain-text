@@ -2,6 +2,31 @@
 
 Paste text from the clipboard as any format you want.
 
+### Installable native Rust version for Tezbar
+
+The standalone implementation is in [`native/`](native/README.md), using the
+existing [`v2/`](v2/README.md) Rust engine. The root [`extension.json`](extension.json)
+is the schema 3 process manifest: `com.tezbar.native.paste-as-plain-text`, version
+`1.0.0`, replacing `raycast.paste-as-plain-text`. It preserves the original
+`paste-as-plain-text` command, six preferences, dropdown values and icon.
+
+The macOS Apple Silicon package is built with Rust 1.85 and runs without Node,
+Bun, Cargo or the Tezbar source tree. A Windows x64 package must be built and
+verified separately. Release ZIPs use `extension.json`, `bin/`, `resources/`,
+`licenses/`, `LICENSE` and `NOTICE` at the archive root. See the
+[native build, ZIP smoke test and install handoff](native/README.md).
+
+All seven paste modes have automated tests with recording hosts. Live clipboard,
+focus, Finder/Explorer transfer and UI feedback remain unverified. Known gaps
+include rich clipboard restoration, dynamic command subtitles and animated HUDs;
+the native JSON5 parser also has documented fallback cases. These are described
+in [native limitations](native/README.md#compatibility-and-qa-status).
+
+The original Raycast TypeScript implementation, package metadata, assets and
+license remain below and in `src/`; they are not used to run the native package.
+
+### Original Raycast extension
+
 Support Formats:
 - **Plain Text**: Paste text from the clipboard without formatting
 
@@ -54,4 +79,4 @@ Want more **Productivity** extensions? Try those. [©koinzhang](https://www.rayc
         <img height="64" style="height: 64px" src="https://assets.raycast.com/koinzhang/hide-files/install_button@2x.png">
 </a>
 
-Native Rust implementation: [Native V2 build, integration and verification](v2/README.md).
+Previous compiled-in library: [Native V2 engine and historical integration](v2/README.md).

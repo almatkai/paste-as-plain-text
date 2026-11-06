@@ -1,0 +1,105 @@
+//! Standalone Tezbar process extension (schema 3, protocol 1). The command
+//! behavior is the reused Native V2 engine in `../v2`; this binary only adapts
+//! its `Host` seam to the SDK's JSONL process transport.
+mod host;
+mod migration;
+#[cfg(test)]
+mod tests;
+
+use serde_json::{json, Value};
+use tezbar_extension_sdk::{BoxFuture, CoreResult, Extension, ExtensionContext};
+
+pub const ID: &str = "com.tezbar.native.paste-as-plain-text";
+
+struct Adapter;
+
+/// Saved checkbox preferences may be strings in the current host. Convert only
+/// its two supported encodings; leave absent defaults and malformed values to
+/// the engine's explicit validation (and normal failure-notice path).
+fn normalize_preferences(payload: &Value) -> Value {
+    let mut payload = payload.clone();
+    if let Some(prefs) = payload
+        .get_mut("preferences")
+        .and_then(Value::as_object_mut)
+    {
+        for key in [
+            "trimStart",
+            "trimEnd",
+            "cleanLineBreaks",
+            "autoFetchTitle",
+            "replaceClipboard",
+            "showTips",
+        ] {
+            if let Some(value) = prefs.get_mut(key) {
+                match value.as_str() {
+                    Some("true") => *value = json!(true),
+                    Some("false") => *value = json!(false),
+                    _ => {}
+                }
+            }
+        }
+    }
+    payload
+}
+impl Extension for Adapter {
+    fn id(&self) -> &'static str {
+        ID
+    }
+    fn version(&self) -> &'static str {
+        env!("CARGO_PKG_VERSION")
+    }
+    fn commands(&self) -> &'static [&'static str] {
+        tezbar_paste_as_plain_text::commands()
+    }
+    fn initialize<'a>(&'a self, ctx: &'a ExtensionContext) -> BoxFuture<'a, CoreResult> {
+        Box::pin(async move {
+            migration::initialize(ctx).await?;
+            Ok(json!({"ready":true}))
+        })
+    }
+    fn handle<'a>(
+        &'a self,
+        ctx: &'a ExtensionContext,
+        command: &'a str,
+        operation: &'a str,
+        payload: &'a Value,
+        state: &'a mut Value,
+    ) -> BoxFuture<'a, CoreResult> {
+        Box::pin(async move {
+            // This source command has no view or bound actions. Reject forged
+            // action calls instead of acknowledging an action that never ran.
+            if operation == "extension:invoke-action" {
+                return Err("This no-view command has no bound actions".into());
+            }
+            let host = host::ProcessHost::system(ctx);
+            let payload = normalize_preferences(payload);
+            let result =
+                tezbar_paste_as_plain_text::handle(&host, command, operation, &payload, state)
+                    .await;
+            // Expected command failures are domain outcomes, not transport
+            // failures. Keeping their SDK session until the host disposes it
+            // avoids failed-open cleanup tearing down notification ownership.
+            match result {
+                Err(message) if operation == "extension:run-command" => {
+                    Ok(json!({"ok":false,"mode":"no-view","message":message}))
+                }
+                other => other,
+            }
+        })
+    }
+}
+
+fn main() {
+    let runtime = tokio::runtime::Builder::new_multi_thread()
+        .worker_threads(2)
+        .enable_all()
+        .build()
+        .expect("extension runtime");
+    let result = runtime.block_on(tezbar_extension_sdk::serve(Adapter));
+    // Session/task cleanup completes inside serve; bound runtime teardown.
+    runtime.shutdown_timeout(std::time::Duration::from_millis(500));
+    if let Err(error) = result {
+        eprintln!("{error}");
+        std::process::exit(1);
+    }
+}

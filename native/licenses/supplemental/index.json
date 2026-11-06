@@ -1,0 +1,58 @@
+{
+  "fxhash-0.2.1": [
+    {
+      "path": "licenses/supplemental/fxhash-0.2.1/COPYRIGHT-lib.rs",
+      "sha256": "885b72a1c977dc1c3ff4e0652719e62b6d8c3e713403e571afd581283f72df7b",
+      "source": "Exact published crate source / author and license declaration",
+      "crateFile": "lib.rs"
+    },
+    {
+      "path": "licenses/supplemental/fxhash-0.2.1/LICENSE-APACHE-2.0",
+      "sha256": "0ed6b1b2760294d4aaaa45be38e166fcc0168e1dd5190423c096fcbe1c94afbf",
+      "source": "Standard Apache-2.0 license text; Apache alternative selected as declared in published Cargo.toml"
+    }
+  ],
+  "mac-0.1.1": [
+    {
+      "path": "licenses/supplemental/mac-0.1.1/COPYRIGHT-Cargo.toml",
+      "sha256": "6d465c5e5a4b3e197049e9fb7393b2f996c1c654e6ded700afce046fac2f7969",
+      "source": "Exact published crate source / author and license declaration",
+      "crateFile": "Cargo.toml"
+    },
+    {
+      "path": "licenses/supplemental/mac-0.1.1/LICENSE-APACHE-2.0",
+      "sha256": "0ed6b1b2760294d4aaaa45be38e166fcc0168e1dd5190423c096fcbe1c94afbf",
+      "source": "Standard Apache-2.0 license text; Apache alternative selected as declared in published Cargo.toml"
+    }
+  ],
+  "selectors-0.26.0": [
+    {
+      "path": "licenses/supplemental/selectors-0.26.0/COPYRIGHT-lib.rs",
+      "sha256": "d54c6e13e9e952dac17d209171df8657e3cae93beaddace4906150cdec8d02e9",
+      "source": "Exact published crate source with MPL-2.0 header",
+      "crateFile": "lib.rs"
+    },
+    {
+      "path": "licenses/supplemental/selectors-0.26.0/LICENSE-MPL-2.0",
+      "sha256": "fab3dd6bdab226f1c08630b1dd917e11fcb4ec5e1e020e2c16f83a0a13863e85",
+      "source": "Standard MPL-2.0 text from cssparser 0.34.0 (LICENSE); matches selectors source declaration"
+    }
+  ],
+  "match_token-0.1.0": [
+    {
+      "path": "licenses/supplemental/match_token-0.1.0/COPYRIGHT",
+      "sha256": "c6b91503fc0a9852e688b56eef715dba9a1ab4b074e86875af2471ce0163b2e5",
+      "source": "https://raw.githubusercontent.com/servo/html5ever/0e4e125b8672abad4ff14d1e0043d3be9305af6a/COPYRIGHT"
+    },
+    {
+      "path": "licenses/supplemental/match_token-0.1.0/LICENSE-APACHE",
+      "sha256": "a60eea817514531668d7e00765731449fe14d059d3249e0bc93b36de45f759f2",
+      "source": "https://raw.githubusercontent.com/servo/html5ever/0e4e125b8672abad4ff14d1e0043d3be9305af6a/LICENSE-APACHE"
+    },
+    {
+      "path": "licenses/supplemental/match_token-0.1.0/LICENSE-MIT",
+      "sha256": "86dd7f026f916daf7511e39951ad8ea8cf55a8db67ae64060dacf829761c18f3",
+      "source": "https://raw.githubusercontent.com/servo/html5ever/0e4e125b8672abad4ff14d1e0043d3be9305af6a/LICENSE-MIT"
+    }
+  ]
+}

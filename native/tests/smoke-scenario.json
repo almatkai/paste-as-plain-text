@@ -1,0 +1,849 @@
+{
+  "sessions": [
+    {
+      "open": {
+        "commandName": "paste-as-plain-text",
+        "preferences": {},
+        "argumentValues": {
+          "advancedPasteFormat": "Markdown Link"
+        }
+      },
+      "replies": [
+        {
+          "method": "host.window.visibility",
+          "params": {
+            "visible": false
+          },
+          "result": null
+        },
+        {
+          "method": "host.clipboard.read",
+          "params": {
+            "format": "text"
+          },
+          "result": "  not a url  "
+        },
+        {
+          "method": "host.clipboard.pasteText",
+          "params": {
+            "text": "not a url"
+          },
+          "result": {
+            "ok": true,
+            "message": "Pasted text"
+          }
+        },
+        {
+          "method": "host.notifications.show",
+          "params": {
+            "id": "paste-result",
+            "title": "Paste as Plain Text",
+            "body": "📋 Paste as Plain Text"
+          },
+          "result": true
+        }
+      ],
+      "expect": {
+        "result": {
+          "ok": true,
+          "mode": "no-view",
+          "message": "📋 Paste as Plain Text"
+        }
+      },
+      "calls": [
+        {
+          "operation": "extension:refresh-session",
+          "expect": {
+            "result": {
+              "ok": true,
+              "mode": "unchanged"
+            }
+          }
+        },
+        {
+          "operation": "extension:invoke-action",
+          "payload": {
+            "actionId": "paste"
+          },
+          "expect": {
+            "error": "This no-view command has no bound actions"
+          }
+        }
+      ]
+    },
+    {
+      "open": {
+        "commandName": "paste-as-plain-text",
+        "preferences": {
+          "replaceClipboard": true
+        },
+        "argumentValues": {
+          "advancedPasteFormat": "JSON"
+        }
+      },
+      "replies": [
+        {
+          "method": "host.window.visibility",
+          "params": {
+            "visible": false
+          },
+          "result": null
+        },
+        {
+          "method": "host.clipboard.read",
+          "params": {
+            "format": "text"
+          },
+          "result": "{a: [1, 'x',],}"
+        },
+        {
+          "method": "host.clipboard.pasteText",
+          "params": {
+            "text": "{\n  \"a\": [\n    1,\n    \"x\"\n  ]\n}"
+          },
+          "result": {
+            "ok": true,
+            "message": "Pasted text"
+          }
+        },
+        {
+          "method": "host.clipboard.write",
+          "params": {
+            "text": "{\n  \"a\": [\n    1,\n    \"x\"\n  ]\n}"
+          },
+          "result": {
+            "ok": true
+          }
+        },
+        {
+          "method": "host.notifications.show",
+          "params": {
+            "id": "paste-result",
+            "title": "Paste as Plain Text",
+            "body": "📦 Paste as JSON"
+          },
+          "result": true
+        }
+      ],
+      "expect": {
+        "result": {
+          "ok": true,
+          "mode": "no-view",
+          "message": "📦 Paste as JSON"
+        }
+      }
+    },
+    {
+      "open": {
+        "commandName": "paste-as-plain-text",
+        "preferences": {
+          "showTips": false
+        }
+      },
+      "replies": [
+        {
+          "method": "host.window.visibility",
+          "params": {
+            "visible": false
+          },
+          "result": null
+        },
+        {
+          "method": "host.clipboard.read",
+          "params": {
+            "format": "text"
+          },
+          "result": ""
+        },
+        {
+          "method": "host.notifications.show",
+          "params": {
+            "id": "paste-result",
+            "title": "Paste as Plain Text",
+            "body": "No content in clipboard"
+          },
+          "result": true
+        }
+      ],
+      "expect": {
+        "result": {
+          "ok": false,
+          "mode": "no-view",
+          "message": "No content in clipboard"
+        }
+      }
+    },
+    {
+      "open": {
+        "commandName": "paste-as-plain-text",
+        "preferences": {
+          "trimStart": false,
+          "cleanLineBreaks": true,
+          "showTips": false
+        },
+        "argumentValues": {
+          "advancedPasteFormat": ""
+        }
+      },
+      "replies": [
+        {
+          "method": "host.window.visibility",
+          "params": {
+            "visible": false
+          },
+          "result": null
+        },
+        {
+          "method": "host.clipboard.read",
+          "params": {
+            "format": "text"
+          },
+          "result": "  a\r\n b  "
+        },
+        {
+          "method": "host.clipboard.pasteText",
+          "params": {
+            "text": "  a b"
+          },
+          "result": {
+            "ok": true,
+            "message": "Pasted text"
+          }
+        }
+      ],
+      "expect": {
+        "result": {
+          "ok": true,
+          "mode": "no-view",
+          "message": ""
+        }
+      }
+    },
+    {
+      "open": {
+        "commandName": "paste-as-plain-text",
+        "preferences": {},
+        "argumentValues": {
+          "advancedPasteFormat": "URL"
+        }
+      },
+      "replies": [
+        {
+          "method": "host.window.visibility",
+          "params": {
+            "visible": false
+          },
+          "result": null
+        },
+        {
+          "method": "host.clipboard.read",
+          "params": {
+            "format": "text"
+          },
+          "result": "see https://example.com/a?b=1 now"
+        },
+        {
+          "method": "host.clipboard.pasteText",
+          "params": {
+            "text": "https://example.com/a?b=1"
+          },
+          "result": {
+            "ok": true,
+            "message": "Pasted text"
+          }
+        },
+        {
+          "method": "host.notifications.show",
+          "params": {
+            "id": "paste-result",
+            "title": "Paste as Plain Text",
+            "body": "🔗 Paste as URL"
+          },
+          "result": true
+        }
+      ],
+      "expect": {
+        "result": {
+          "ok": true,
+          "mode": "no-view",
+          "message": "🔗 Paste as URL"
+        }
+      }
+    },
+    {
+      "open": {
+        "commandName": "paste-as-plain-text",
+        "preferences": {},
+        "argumentValues": {
+          "advancedPasteFormat": "Number"
+        }
+      },
+      "replies": [
+        {
+          "method": "host.window.visibility",
+          "params": {
+            "visible": false
+          },
+          "result": null
+        },
+        {
+          "method": "host.clipboard.read",
+          "params": {
+            "format": "text"
+          },
+          "result": "Total -123,456.7 units"
+        },
+        {
+          "method": "host.clipboard.pasteText",
+          "params": {
+            "text": "-123456.7"
+          },
+          "result": {
+            "ok": true,
+            "message": "Pasted text"
+          }
+        },
+        {
+          "method": "host.notifications.show",
+          "params": {
+            "id": "paste-result",
+            "title": "Paste as Plain Text",
+            "body": "🔢 Paste as Number"
+          },
+          "result": true
+        }
+      ],
+      "expect": {
+        "result": {
+          "ok": true,
+          "mode": "no-view",
+          "message": "🔢 Paste as Number"
+        }
+      }
+    },
+    {
+      "open": {
+        "commandName": "paste-as-plain-text",
+        "preferences": {
+          "autoFetchTitle": false
+        },
+        "argumentValues": {
+          "advancedPasteFormat": "Markdown Link"
+        }
+      },
+      "replies": [
+        {
+          "method": "host.window.visibility",
+          "params": {
+            "visible": false
+          },
+          "result": null
+        },
+        {
+          "method": "host.clipboard.read",
+          "params": {
+            "format": "text"
+          },
+          "result": " https://example.com/page "
+        },
+        {
+          "method": "host.clipboard.pasteText",
+          "params": {
+            "text": "[](https://example.com/page)"
+          },
+          "result": {
+            "ok": true,
+            "message": "Pasted text"
+          }
+        },
+        {
+          "method": "host.notifications.show",
+          "params": {
+            "id": "paste-result",
+            "title": "Paste as Plain Text",
+            "body": "📄 Paste as Markdown Link"
+          },
+          "result": true
+        }
+      ],
+      "expect": {
+        "result": {
+          "ok": true,
+          "mode": "no-view",
+          "message": "📄 Paste as Markdown Link"
+        }
+      }
+    },
+    {
+      "open": {
+        "commandName": "paste-as-plain-text",
+        "preferences": {
+          "autoFetchTitle": false
+        },
+        "argumentValues": {
+          "advancedPasteFormat": "Markdown Image"
+        }
+      },
+      "replies": [
+        {
+          "method": "host.window.visibility",
+          "params": {
+            "visible": false
+          },
+          "result": null
+        },
+        {
+          "method": "host.clipboard.read",
+          "params": {
+            "format": "text"
+          },
+          "result": "https://example.com/a.png"
+        },
+        {
+          "method": "host.clipboard.pasteText",
+          "params": {
+            "text": "![](https://example.com/a.png)"
+          },
+          "result": {
+            "ok": true,
+            "message": "Pasted text"
+          }
+        },
+        {
+          "method": "host.notifications.show",
+          "params": {
+            "id": "paste-result",
+            "title": "Paste as Plain Text",
+            "body": "🏞️ Paste as Markdown Image"
+          },
+          "result": true
+        }
+      ],
+      "expect": {
+        "result": {
+          "ok": true,
+          "mode": "no-view",
+          "message": "🏞️ Paste as Markdown Image"
+        }
+      }
+    },
+    {
+      "open": {
+        "commandName": "paste-as-plain-text",
+        "preferences": {},
+        "argumentValues": {
+          "advancedPasteFormat": "JSON"
+        }
+      },
+      "replies": [
+        {
+          "method": "host.window.visibility",
+          "params": {
+            "visible": false
+          },
+          "result": null
+        },
+        {
+          "method": "host.clipboard.read",
+          "params": {
+            "format": "text"
+          },
+          "result": "not json"
+        },
+        {
+          "method": "host.clipboard.pasteText",
+          "params": {
+            "text": "not json"
+          },
+          "result": {
+            "ok": true,
+            "message": "Pasted text"
+          }
+        },
+        {
+          "method": "host.notifications.show",
+          "params": {
+            "id": "paste-result",
+            "title": "Paste as Plain Text",
+            "body": "📋 Paste as Plain Text"
+          },
+          "result": true
+        }
+      ],
+      "expect": {
+        "result": {
+          "ok": true,
+          "mode": "no-view",
+          "message": "📋 Paste as Plain Text"
+        }
+      }
+    },
+    {
+      "open": {
+        "commandName": "paste-as-plain-text",
+        "preferences": {
+          "trimStart": "false",
+          "trimEnd": "false",
+          "cleanLineBreaks": "false",
+          "autoFetchTitle": "false",
+          "replaceClipboard": "false",
+          "showTips": "false"
+        },
+        "argumentValues": {
+          "advancedPasteFormat": ""
+        }
+      },
+      "replies": [
+        {
+          "method": "host.window.visibility",
+          "params": {
+            "visible": false
+          },
+          "result": null
+        },
+        {
+          "method": "host.clipboard.read",
+          "params": {
+            "format": "text"
+          },
+          "result": "  a\r\nb  "
+        },
+        {
+          "method": "host.clipboard.pasteText",
+          "params": {
+            "text": "  a\r\nb  "
+          },
+          "result": {
+            "ok": true,
+            "message": "Pasted text"
+          }
+        }
+      ],
+      "expect": {
+        "result": {
+          "ok": true,
+          "mode": "no-view",
+          "message": ""
+        }
+      }
+    },
+    {
+      "open": {
+        "commandName": "paste-as-plain-text",
+        "preferences": {
+          "trimStart": "true",
+          "trimEnd": "true",
+          "cleanLineBreaks": "true",
+          "autoFetchTitle": "true",
+          "replaceClipboard": "true",
+          "showTips": "true"
+        },
+        "argumentValues": {
+          "advancedPasteFormat": ""
+        }
+      },
+      "replies": [
+        {
+          "method": "host.window.visibility",
+          "params": {
+            "visible": false
+          },
+          "result": null
+        },
+        {
+          "method": "host.clipboard.read",
+          "params": {
+            "format": "text"
+          },
+          "result": "  a\r\nb  "
+        },
+        {
+          "method": "host.clipboard.pasteText",
+          "params": {
+            "text": "a b"
+          },
+          "result": {
+            "ok": true,
+            "message": "Pasted text"
+          }
+        },
+        {
+          "method": "host.clipboard.write",
+          "params": {
+            "text": "a b"
+          },
+          "result": {
+            "ok": true
+          }
+        },
+        {
+          "method": "host.notifications.show",
+          "params": {
+            "id": "paste-result",
+            "title": "Paste as Plain Text",
+            "body": "📋 Paste as Plain Text"
+          },
+          "result": true
+        }
+      ],
+      "expect": {
+        "result": {
+          "ok": true,
+          "mode": "no-view",
+          "message": "📋 Paste as Plain Text"
+        }
+      }
+    },
+    {
+      "open": {
+        "commandName": "paste-as-plain-text",
+        "preferences": {
+          "autoFetchTitle": "false",
+          "showTips": "false"
+        },
+        "argumentValues": {
+          "advancedPasteFormat": "Markdown Link"
+        }
+      },
+      "replies": [
+        {
+          "method": "host.window.visibility",
+          "params": {
+            "visible": false
+          },
+          "result": null
+        },
+        {
+          "method": "host.clipboard.read",
+          "params": {
+            "format": "text"
+          },
+          "result": "https://example.invalid/page"
+        },
+        {
+          "method": "host.clipboard.pasteText",
+          "params": {
+            "text": "[](https://example.invalid/page)"
+          },
+          "result": {
+            "ok": true,
+            "message": "Pasted text"
+          }
+        }
+      ],
+      "expect": {
+        "result": {
+          "ok": true,
+          "mode": "no-view",
+          "message": ""
+        }
+      }
+    },
+    {
+      "open": {
+        "commandName": "paste-as-plain-text",
+        "preferences": {
+          "showTips": "true"
+        },
+        "argumentValues": {
+          "advancedPasteFormat": ""
+        }
+      },
+      "replies": [
+        {
+          "method": "host.window.visibility",
+          "params": {
+            "visible": false
+          },
+          "result": null
+        },
+        {
+          "method": "host.clipboard.read",
+          "params": {
+            "format": "text"
+          },
+          "result": "x"
+        },
+        {
+          "method": "host.clipboard.pasteText",
+          "params": {
+            "text": "x"
+          },
+          "error": "Accessibility denied"
+        },
+        {
+          "method": "host.notifications.show",
+          "params": {
+            "id": "paste-result",
+            "title": "Paste as Plain Text",
+            "body": "Accessibility denied"
+          },
+          "result": true
+        }
+      ],
+      "expect": {
+        "result": {
+          "ok": false,
+          "mode": "no-view",
+          "message": "Accessibility denied"
+        }
+      }
+    },
+    {
+      "open": {
+        "commandName": "paste-as-plain-text",
+        "preferences": {
+          "trimStart": "invalid"
+        }
+      },
+      "replies": [
+        {
+          "method": "host.notifications.show",
+          "params": {
+            "id": "paste-result",
+            "title": "Paste as Plain Text",
+            "body": "Preference trimStart must be boolean"
+          },
+          "result": true
+        }
+      ],
+      "expect": {
+        "result": {
+          "ok": false,
+          "mode": "no-view",
+          "message": "Preference trimStart must be boolean"
+        }
+      }
+    },
+    {
+      "open": {
+        "commandName": "paste-as-plain-text",
+        "preferences": {
+          "trimEnd": "invalid"
+        }
+      },
+      "replies": [
+        {
+          "method": "host.notifications.show",
+          "params": {
+            "id": "paste-result",
+            "title": "Paste as Plain Text",
+            "body": "Preference trimEnd must be boolean"
+          },
+          "result": true
+        }
+      ],
+      "expect": {
+        "result": {
+          "ok": false,
+          "mode": "no-view",
+          "message": "Preference trimEnd must be boolean"
+        }
+      }
+    },
+    {
+      "open": {
+        "commandName": "paste-as-plain-text",
+        "preferences": {
+          "cleanLineBreaks": "invalid"
+        }
+      },
+      "replies": [
+        {
+          "method": "host.notifications.show",
+          "params": {
+            "id": "paste-result",
+            "title": "Paste as Plain Text",
+            "body": "Preference cleanLineBreaks must be boolean"
+          },
+          "result": true
+        }
+      ],
+      "expect": {
+        "result": {
+          "ok": false,
+          "mode": "no-view",
+          "message": "Preference cleanLineBreaks must be boolean"
+        }
+      }
+    },
+    {
+      "open": {
+        "commandName": "paste-as-plain-text",
+        "preferences": {
+          "autoFetchTitle": "invalid"
+        }
+      },
+      "replies": [
+        {
+          "method": "host.notifications.show",
+          "params": {
+            "id": "paste-result",
+            "title": "Paste as Plain Text",
+            "body": "Preference autoFetchTitle must be boolean"
+          },
+          "result": true
+        }
+      ],
+      "expect": {
+        "result": {
+          "ok": false,
+          "mode": "no-view",
+          "message": "Preference autoFetchTitle must be boolean"
+        }
+      }
+    },
+    {
+      "open": {
+        "commandName": "paste-as-plain-text",
+        "preferences": {
+          "replaceClipboard": "invalid"
+        }
+      },
+      "replies": [
+        {
+          "method": "host.notifications.show",
+          "params": {
+            "id": "paste-result",
+            "title": "Paste as Plain Text",
+            "body": "Preference replaceClipboard must be boolean"
+          },
+          "result": true
+        }
+      ],
+      "expect": {
+        "result": {
+          "ok": false,
+          "mode": "no-view",
+          "message": "Preference replaceClipboard must be boolean"
+        }
+      }
+    },
+    {
+      "open": {
+        "commandName": "paste-as-plain-text",
+        "preferences": {
+          "showTips": "invalid"
+        }
+      },
+      "replies": [
+        {
+          "method": "host.notifications.show",
+          "params": {
+            "id": "paste-result",
+            "title": "Paste as Plain Text",
+            "body": "Preference showTips must be boolean"
+          },
+          "result": true
+        }
+      ],
+      "expect": {
+        "result": {
+          "ok": false,
+          "mode": "no-view",
+          "message": "Preference showTips must be boolean"
+        }
+      }
+    }
+  ]
+}
